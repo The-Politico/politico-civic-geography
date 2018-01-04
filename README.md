@@ -22,14 +22,39 @@
   #########################
   # geography settings
 
-  GEOGRAPHY_SECRET_KEY = ''
+  CENSUS_API_KEY = ''
   GEOGRAPHY_AWS_ACCESS_KEY_ID = ''
   GEOGRAPHY_AWS_SECRET_ACCESS_KEY = ''
-  GEOGRAPHY_AWS_REGION = ''
+  GEOGRAPHY_AWS_REGION = 'us-east-1' # default
   GEOGRAPHY_AWS_S3_BUCKET = ''
-  GEOGRAPHY_CLOUDFRONT_ALTERNATE_DOMAIN = ''
-  GEOGRAPHY_S3_UPLOAD_ROOT = ''
+  GEOGRAPHY_S3_UPLOAD_ROOT = 'elections' # default
+  GEOGRAPHY_AWS_ACL = 'public-read' # default
+  GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=5' # default
   ```
+
+### Bootstrapping your database
+
+civic-geography can bootstrap a database of US states for you from U.S. Census cartographic boundary files, creating simplified topojson geography. Just run it!
+
+```
+$ python manage.py bootstrap_geography
+```
+
+
+Use the `--help` flag to see additional options.
+
+*Note:* In order to create simplified geography, you must have [topojson](https://github.com/topojson/topojson) installed and available via command line on your machine. You can install it via npm.
+
+```
+$ npm install -g topojson topojson-server topojson-client
+```
+
+### Publishing geography to S3
+
+```
+$ python manage.py bake_geography
+```
+
 
 ### Developing
 

@@ -1,7 +1,13 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from .views import Home
+from .viewsets import DivisionViewSet, GeographyViewSet
+
+router = routers.DefaultRouter()
+
+router.register(r'divisions', DivisionViewSet)
+router.register(r'geographies', GeographyViewSet)
 
 urlpatterns = [
-    path('', Home.as_view(), name='geography-home'),
+    path('api/', include(router.urls)),
 ]

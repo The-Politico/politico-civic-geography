@@ -1,0 +1,15 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v3.min.js"></script>
+<style media="screen">
+path{
+    stroke: black;
+    stroke-width: 1px;
+    fill: grey;
+}
+</style>
+{% endblock %}

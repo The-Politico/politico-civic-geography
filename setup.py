@@ -21,9 +21,18 @@ setup(
     ],
     keywords='',
 
-    packages=find_packages(exclude=['docs', 'tests']),
+    packages=find_packages(exclude=['docs', 'tests', 'example']),
 
-    install_requires=[],
+    install_requires=[
+        'djangorestframework',
+        'tqdm',
+        'boto3',
+        'geojson',
+        'pyshp',
+        'us',
+        'census',
+        'django-uuslug',
+    ],
 
     extras_require={
         'test': ['pytest'],

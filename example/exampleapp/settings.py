@@ -1,5 +1,7 @@
 import os
 
+import dj_database_url
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -93,10 +95,11 @@ STATIC_URL = '/static/'
 #########################
 # geography settings
 
-GEOGRAPHY_SECRET_KEY = ''
+CENSUS_API_KEY = os.getenv('CENSUS_API_KEY')
 GEOGRAPHY_AWS_ACCESS_KEY_ID = ''
 GEOGRAPHY_AWS_SECRET_ACCESS_KEY = ''
 GEOGRAPHY_AWS_REGION = ''
 GEOGRAPHY_AWS_S3_BUCKET = ''
-GEOGRAPHY_CLOUDFRONT_ALTERNATE_DOMAIN = ''
-GEOGRAPHY_S3_UPLOAD_ROOT = ''
+GEOGRAPHY_AWS_S3_UPLOAD_ROOT = 'elections'
+GEOGRAPHY_AWS_ACL = 'public-read'
+GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=5'
