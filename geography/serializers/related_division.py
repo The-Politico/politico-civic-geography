@@ -3,7 +3,7 @@ from geography.models import Division
 from rest_framework import serializers
 
 
-class ChildDivisionSerializer(serializers.ModelSerializer):
+class RelatedDivisionSerializer(serializers.ModelSerializer):
     level = serializers.SerializerMethodField()
     postal_code = serializers.SerializerMethodField()
 
@@ -18,8 +18,7 @@ class ChildDivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Division
         fields = (
-            'label',
-            'short_label',
+            'name',
             'code',
             'code_components',
             'postal_code',

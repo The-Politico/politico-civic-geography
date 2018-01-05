@@ -1,8 +1,8 @@
-from geography.models import Geography
+from geography.models import Geometry
 from rest_framework import serializers
 
 
-class GeographySerializer(serializers.ModelSerializer):
+class SlimGeometrySerializer(serializers.ModelSerializer):
     subdivision_level = serializers.SerializerMethodField()
     division = serializers.StringRelatedField()
 
@@ -10,16 +10,9 @@ class GeographySerializer(serializers.ModelSerializer):
         return obj.subdivision_level.slug
 
     class Meta:
-        model = Geography
+        model = Geometry
         fields = (
             'id',
             'division',
             'subdivision_level',
-            'simplification',
-            'source',
-            'series',
-            'effective',
-            'effective_start',
-            'effective_end',
-            'topojson',
         )

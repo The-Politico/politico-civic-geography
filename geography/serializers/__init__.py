@@ -1,5 +1,7 @@
 # flake8: noqa
 from .division import DivisionSerializer
-from .child_division import ChildDivisionSerializer
-from .geography import GeographySerializer
-from .slim_geography import SlimGeographySerializer
+from .division_level import DivisionLevelSerializer
+from .geometry import GeometrySerializer
+from .slim_geometry import SlimGeometrySerializer
+from .slim_division import SlimDivisionSerializer
+from .slim_division_level import SlimDivisionLevelSerializer

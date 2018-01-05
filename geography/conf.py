@@ -34,6 +34,6 @@ Settings.AWS_ACL = getattr(
     project_settings, 'GEOGRAPHY_AWS_ACL', 'public-read')
 
 Settings.AWS_CACHE_HEADER = getattr(
-    project_settings, 'GEOGRAPHY_AWS_CACHE_HEADER', 'max-age=5')
+    project_settings, 'GEOGRAPHY_AWS_CACHE_HEADER', 'max-age=31536000')
 
 settings = Settings

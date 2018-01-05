@@ -1,5 +1,5 @@
-from geography.models import Geography
-from geography.serializers import GeographySerializer, SlimGeographySerializer
+from geography.models import Geometry
+from geography.serializers import GeometrySerializer, SlimGeometrySerializer
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.pagination import PageNumberPagination
@@ -12,14 +12,14 @@ class ResultsPagination(PageNumberPagination):
     max_page_size = 500
 
 
-class GeographyViewSet(viewsets.ModelViewSet):
-    queryset = Geography.objects.all()
+class GeometryViewSet(viewsets.ModelViewSet):
+    queryset = Geometry.objects.all()
     pagination_class = ResultsPagination
     authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAdminUser,)
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return SlimGeographySerializer
+            return SlimGeometrySerializer
         else:
-            return GeographySerializer
+            return GeometrySerializer

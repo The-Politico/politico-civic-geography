@@ -1,13 +1,15 @@
 ![POLITICO](https://rawgithub.com/The-Politico/src/master/images/logo/badge.png)
 
-# geography
+# django-politico-civic-geography
+
+Manage political geography and spatial data, the POLITICO way.
 
 ### Quickstart
 
 1. Install the app.
 
   ```
-  $ pip install geography
+  $ pip install django-politico-civic-geography
   ```
 
 2. Add the app to your Django project and configure settings.
@@ -29,12 +31,13 @@
   GEOGRAPHY_AWS_S3_BUCKET = ''
   GEOGRAPHY_S3_UPLOAD_ROOT = 'elections' # default
   GEOGRAPHY_AWS_ACL = 'public-read' # default
-  GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=5' # default
+  GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=31536000' # default
   ```
+
 
 ### Bootstrapping your database
 
-civic-geography can bootstrap a database of US states for you from U.S. Census cartographic boundary files, creating simplified topojson geography. Just run it!
+civic-geography can bootstrap a database of US national, state and county data for you from U.S. Census cartographic boundary files, creating simplified topojson geography. Just run it!
 
 ```
 $ python manage.py bootstrap_geography
@@ -50,6 +53,8 @@ $ npm install -g topojson topojson-server topojson-client
 ```
 
 ### Publishing geography to S3
+
+You can publish
 
 ```
 $ python manage.py bake_geography

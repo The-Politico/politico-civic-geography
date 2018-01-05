@@ -1,10 +1,10 @@
 from geography.models import Division
 
-from .child_division import ChildDivisionSerializer
+from .related_division import RelatedDivisionSerializer
 
 
-class DivisionSerializer(ChildDivisionSerializer):
-    children = ChildDivisionSerializer(many=True, read_only=True)
+class DivisionSerializer(RelatedDivisionSerializer):
+    children = RelatedDivisionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Division

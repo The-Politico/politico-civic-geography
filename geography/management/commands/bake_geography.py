@@ -4,7 +4,7 @@ import os
 import boto3
 from django.core.management.base import BaseCommand
 from geography.conf import settings
-from geography.models import Division, DivisionLevel, Geography
+from geography.models import Division, DivisionLevel, Geometry
 from tqdm import tqdm
 
 OUTPUT_PATH = os.path.join(
@@ -15,7 +15,7 @@ OUTPUT_PATH = os.path.join(
 
 def get_bucket():
     session = boto3.session.Session(
-        region_name=settings.AWS_S3_REGION,
+        region_name=settings.AWS_REGION,
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
     )
@@ -51,32 +51,32 @@ class Command(BaseCommand):
 
         STATE_LEVEL = DivisionLevel.objects.get(name=DivisionLevel.STATE)
 
-        geographies = None
+        geometries = None
         if states[0] == '*':
-            geographies = Geography.objects.filter(
+            geometries = Geometry.objects.filter(
                 series=year, division__level=STATE_LEVEL)
         else:
             for state in states:
                 division = Division.objects.get(level=STATE_LEVEL, code=state)
-                if not geographies:
-                    geographies = division.geographies.filter(series=year)
+                if not geometries:
+                    geometries = division.geometries.filter(series=year)
                 else:
-                    geographies = geographies | division.geographies.filter(
+                    geometries = geometries | division.geometries.filter(
                         series=year
                     )
 
-        for geography in tqdm(geographies):
+        for geometry in tqdm(geometries):
             key = os.path.join(
                 OUTPUT_PATH,
                 options['year'],
                 'state',
-                geography.division.code,
-                '{}.json'.format(geography.subdivision_level.slug)
+                geometry.division.code,
+                '{}.json'.format(geometry.subdivision_level.slug)
             )
             bucket.put_object(
                 Key=key,
                 ACL=settings.AWS_ACL,
-                Body=json.dumps(geography.topojson),
+                Body=json.dumps(geometry.topojson),
                 CacheControl=settings.AWS_CACHE_HEADER,
                 ContentType='application/json'
             )

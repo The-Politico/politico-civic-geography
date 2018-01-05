@@ -12,7 +12,7 @@ import us
 from census import Census
 from django.core.management.base import BaseCommand, CommandError
 from geography.conf import settings
-from geography.models import Division, DivisionLevel, Geography
+from geography.models import Division, DivisionLevel, Geometry
 from tqdm import tqdm
 
 SHP_BASE = 'https://www2.census.gov/geo/tiger/GENZ{}/shp/'
@@ -187,7 +187,7 @@ class Command(BaseCommand):
                 }
             }
             features.append(geodata)
-        Geography.objects.update_or_create(
+        Geometry.objects.update_or_create(
             division=self.NATION,
             subdivision_level=self.STATE_LEVEL,
             simplification=self.THRESHOLDS['nation'],
@@ -201,7 +201,7 @@ class Command(BaseCommand):
             },
         )
 
-        geo, created = Geography.objects.update_or_create(
+        geo, created = Geometry.objects.update_or_create(
             division=self.NATION,
             subdivision_level=self.COUNTY_LEVEL,
             simplification=self.THRESHOLDS['nation'],
@@ -261,7 +261,7 @@ class Command(BaseCommand):
                     'name': state['NAME']
                 }
             }
-            geojson, created = Geography.objects.update_or_create(
+            geojson, created = Geometry.objects.update_or_create(
                 division=state_obj,
                 subdivision_level=self.STATE_LEVEL,
                 simplification=self.THRESHOLDS['state'],
@@ -275,7 +275,7 @@ class Command(BaseCommand):
                     ),
                 },
             )
-            geojson, created = Geography.objects.update_or_create(
+            geojson, created = Geometry.objects.update_or_create(
                 division=state_obj,
                 subdivision_level=self.COUNTY_LEVEL,
                 simplification=self.THRESHOLDS['county'],

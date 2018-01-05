@@ -1,5 +1,5 @@
 from django.contrib import admin
-from geography.models import (Division, DivisionLevel, Geography,
+from geography.models import (Division, DivisionLevel, Geometry,
                               IntersectRelationship)
 
 
@@ -17,11 +17,11 @@ class DivisionAdmin(admin.ModelAdmin):
     readonly_fields = ('parent', 'uid',)
 
 
-class GeographyAdmin(admin.ModelAdmin):
+class GeometryAdmin(admin.ModelAdmin):
     list_display = ('division', 'map_level', 'small_preview')
     list_filter = ('subdivision_level',)
     search_fields = ('division__name',)
-    readonly_fields = ('file_size', 'large_preview',)
+    readonly_fields = ('file_size', 'large_preview', 'source', 'series',)
 
     fieldsets = (
         (None, {
@@ -45,4 +45,4 @@ class GeographyAdmin(admin.ModelAdmin):
 
 admin.site.register(DivisionLevel)
 admin.site.register(Division, DivisionAdmin)
-admin.site.register(Geography, GeographyAdmin)
+admin.site.register(Geometry, GeometryAdmin)

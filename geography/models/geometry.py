@@ -10,7 +10,7 @@ from .division import Division
 from .division_level import DivisionLevel
 
 
-class Geography(models.Model):
+class Geometry(models.Model):
     """
     The spatial representation (in topoJSON) of a Division.
     """
@@ -50,7 +50,7 @@ class Geography(models.Model):
     division = models.ForeignKey(
         Division,
         on_delete=models.CASCADE,
-        related_name="geographies"
+        related_name="geometries"
     )
     subdivision_level = models.ForeignKey(
         DivisionLevel,
@@ -77,11 +77,11 @@ class Geography(models.Model):
     )
 
     effective = models.BooleanField(default=True)
-    effective_start = models.DateTimeField(null=True, blank=True)
-    effective_end = models.DateTimeField(null=True, blank=True)
+    effective_start = models.DateField(null=True, blank=True)
+    effective_end = models.DateField(null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "Geographies"
+        verbose_name_plural = "Geometries"
 
     def __str__(self):
         return '{} - {} map, {}'.format(
