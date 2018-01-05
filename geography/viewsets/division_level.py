@@ -10,7 +10,6 @@ class DivisionLevelViewSet(viewsets.ModelViewSet):
     queryset = DivisionLevel.objects.all()
     authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAdminUser,)
-    serializer_class = DivisionLevelSerializer
 
     def get_serializer_class(self):
         if self.action == 'list':

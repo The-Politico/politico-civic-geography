@@ -10,6 +10,8 @@ setup(
     license='MIT',
     classifiers=[
         'Development Status :: 3 - Alpha',
+        'Framework :: Django',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
         'License :: OSI Approved :: MIT License',
