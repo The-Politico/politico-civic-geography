@@ -34,6 +34,12 @@ Manage political geography and spatial data, the POLITICO way.
   GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=31536000' # default
   ```
 
+3. Migrate the database.
+
+  ```
+  $ python manage.py migrate geography
+  ```
+
 
 ### Bootstrapping your database
 
