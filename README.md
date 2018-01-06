@@ -2,7 +2,7 @@
 
 # django-politico-civic-geography
 
-Manage political geography and spatial data, the POLITICO way.
+Manage political geographic and spatial data, the POLITICO way.
 
 ### Quickstart
 
@@ -64,7 +64,7 @@ $ npm install -g topojson topojson-server topojson-client
 
 ### Publishing geography to S3
 
-You can publish topojson to an S3 bucket with this command.
+You can publish your geometries as topojson to an S3 bucket with this command.
 
 ```
 $ python manage.py bake_geography
@@ -75,24 +75,12 @@ $ python manage.py bake_geography
 
 ##### Running a development server
 
-Developing python files? Move into example directory and run the development server with pipenv.
+Move into the example directory, install dependencies and run the development server with pipenv.
 
   ```
   $ cd example
+  $ pipenv install
   $ pipenv run python manage.py runserver
-  ```
-
-Developing static assets? Move into the pluggable app's staticapp directory and start the node development server, which will automatically proxy Django's development server.
-
-  ```
-  $ cd geography/staticapp
-  $ gulp
-  ```
-
-Want to not worry about it? Use the shortcut make command.
-
-  ```
-  $ make dev
   ```
 
 ##### Setting up a PostgreSQL database
@@ -103,10 +91,10 @@ Want to not worry about it? Use the shortcut make command.
   $ make database
   ```
 
-2. Add a connection URL to the `.env` file.
+2. Add a connection URL to `example/.env`.
 
   ```
-  DATABASE_URL="postgres://localhost:5432/geography"
+  DATABASE_URL="postgres://localhost:5432/entity"
   ```
 
 3. Run migrations from the example app.
