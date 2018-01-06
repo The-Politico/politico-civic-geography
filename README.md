@@ -94,7 +94,7 @@ Move into the example directory, install dependencies and run the development se
 2. Add a connection URL to `example/.env`.
 
   ```
-  DATABASE_URL="postgres://localhost:5432/entity"
+  DATABASE_URL="postgres://localhost:5432/geography"
   ```
 
 3. Run migrations from the example app.
