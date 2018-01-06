@@ -26,14 +26,14 @@ setup(
     packages=find_packages(exclude=['docs', 'tests', 'example']),
 
     install_requires=[
-        'djangorestframework',
-        'tqdm',
         'boto3',
-        'geojson',
-        'pyshp',
-        'us',
         'census',
         'django-uuslug',
+        'djangorestframework',
+        'geojson',
+        'pyshp',
+        'tqdm',
+        'us',
     ],
 
     extras_require={
