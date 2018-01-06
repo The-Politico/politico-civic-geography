@@ -1,18 +1,9 @@
 from geography.models import DivisionLevel
-from geography.serializers import (DivisionLevelSerializer,
-                                   SlimDivisionLevelSerializer)
-from rest_framework import viewsets
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAdminUser
+from geography.serializers import DivisionLevelSerializer
+
+from .base import BaseViewSet
 
 
-class DivisionLevelViewSet(viewsets.ModelViewSet):
+class DivisionLevelViewSet(BaseViewSet):
     queryset = DivisionLevel.objects.all()
-    authentication_classes = (BasicAuthentication,)
-    permission_classes = (IsAdminUser,)
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return SlimDivisionLevelSerializer
-        else:
-            return DivisionLevelSerializer
+    serializer_class = DivisionLevelSerializer

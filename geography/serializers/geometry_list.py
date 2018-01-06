@@ -2,7 +2,7 @@ from geography.models import Geometry
 from rest_framework import serializers
 
 
-class SlimGeometrySerializer(serializers.ModelSerializer):
+class GeometryListSerializer(serializers.ModelSerializer):
     subdivision_level = serializers.SerializerMethodField()
     division = serializers.StringRelatedField()
 

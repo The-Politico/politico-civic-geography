@@ -32,6 +32,10 @@ Manage political geography and spatial data, the POLITICO way.
   GEOGRAPHY_S3_UPLOAD_ROOT = 'elections' # default
   GEOGRAPHY_AWS_ACL = 'public-read' # default
   GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=31536000' # default
+  GEOGRAPHY_API_AUTHENTICATION_CLASS = 'rest_framework.authentication.BasicAuthentication' # default
+  GEOGRAPHY_API_PERMISSION_CLASS = 'rest_framework.permissions.IsAdminUser' # default
+  GEOGRAPHY_API_PAGINATION_CLASS = 'geography.pagination.ResultsPagination' # default
+
   ```
 
 3. Migrate the database.
@@ -60,7 +64,7 @@ $ npm install -g topojson topojson-server topojson-client
 
 ### Publishing geography to S3
 
-You can publish
+You can publish topojson to an S3 bucket with this command.
 
 ```
 $ python manage.py bake_geography

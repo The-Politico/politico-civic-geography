@@ -36,4 +36,22 @@ Settings.AWS_ACL = getattr(
 Settings.AWS_CACHE_HEADER = getattr(
     project_settings, 'GEOGRAPHY_AWS_CACHE_HEADER', 'max-age=31536000')
 
+Settings.API_AUTHENTICATION_CLASS = getattr(
+    project_settings,
+    'GEOGRAPHY_API_AUTHENTICATION_CLASS',
+    'rest_framework.authentication.BasicAuthentication'
+)
+
+Settings.API_PERMISSION_CLASS = getattr(
+    project_settings,
+    'GEOGRAPHY_API_PERMISSION_CLASS',
+    'rest_framework.permissions.IsAdminUser'
+)
+
+Settings.API_PAGINATION_CLASS = getattr(
+    project_settings,
+    'GEOGRAPHY_API_PAGINATION_CLASS',
+    'geography.pagination.ResultsPagination'
+)
+
 settings = Settings
