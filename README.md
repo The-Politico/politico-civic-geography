@@ -59,7 +59,7 @@ Use the `--help` flag to see additional options.
 *Note:* In order to create simplified geography, you must have [topojson](https://github.com/topojson/topojson) installed and available via command line on your machine. You can install it via npm.
 
 ```
-$ npm install -g topojson topojson-server topojson-client
+$ npm install -g topojson
 ```
 
 ### Publishing geography to S3
