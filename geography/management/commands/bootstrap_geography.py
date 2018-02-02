@@ -10,6 +10,7 @@ import geojson
 import shapefile
 import us
 from census import Census
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.core.management.base import BaseCommand, CommandError
 from geography.conf import settings
 from geography.models import Division, DivisionLevel, Geometry
@@ -42,16 +43,16 @@ class Command(BaseCommand):
             name=DivisionLevel.STATE,
             parent=self.NATIONAL_LEVEL
         )
+        self.DISTRICT_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.DISTRICT,
+            parent=self.STATE_LEVEL
+        )
         self.COUNTY_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.COUNTY,
             parent=self.STATE_LEVEL
         )
 
         # Other fixtures
-        DivisionLevel.objects.get_or_create(
-            name=DivisionLevel.DISTRICT,
-            parent=self.STATE_LEVEL
-        )
         DivisionLevel.objects.get_or_create(
             name=DivisionLevel.TOWNSHIP,
             parent=self.COUNTY_LEVEL
@@ -84,6 +85,26 @@ class Command(BaseCommand):
         if not os.path.exists(DOWNLOAD_PATH):
             os.makedirs(DOWNLOAD_PATH)
 
+        if not Path(ZIPFILE).is_file():
+            with request.urlopen('{}.zip'.format(SHP_PATH)) as response,\
+                    open(ZIPFILE, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+
+        if not Path('{}{}.shp'.format(DOWNLOAD_PATH, SHP_SLUG)).is_file():
+            with zipfile.ZipFile(ZIPFILE, 'r') as file:
+                file.extractall(DOWNLOAD_PATH)
+
+    def download_district_data(self):
+        SHP_SLUG = 'cb_{}_us_cd{}_500k'.format(self.YEAR, self.CONGRESS)
+        DOWNLOAD_PATH = os.path.join(
+            DATA_DIRECTORY,
+            SHP_SLUG
+        )
+        ZIPFILE = '{}{}.zip'.format(DOWNLOAD_PATH, SHP_SLUG)
+        SHP_PATH = os.path.join(
+            SHP_BASE.format(self.YEAR),
+            SHP_SLUG
+        )
         if not Path(ZIPFILE).is_file():
             with request.urlopen('{}.zip'.format(SHP_PATH)) as response,\
                     open(ZIPFILE, 'wb') as out_file:
@@ -154,6 +175,52 @@ class Command(BaseCommand):
             features.append(geodata)
         threshold = self.THRESHOLDS['nation'] if fips == '00' else \
             self.THRESHOLDS['county']
+        return self.toposimplify(
+            geojson.FeatureCollection(features),
+            threshold
+        )
+
+    def get_district_shp(self, fips):
+        SHP_SLUG = 'cb_{}_us_cd{}_500k'.format(self.YEAR, self.CONGRESS)
+        DOWNLOAD_PATH = os.path.join(
+            DATA_DIRECTORY,
+            SHP_SLUG
+        )
+        shape = shapefile.Reader(os.path.join(
+            DOWNLOAD_PATH,
+            '{}.shp'.format(SHP_SLUG)
+        ))
+        fields = shape.fields[1:]
+        field_names = [f[0] for f in fields]
+        district_records = [
+            shp for shp in shape.shapeRecords()
+            if dict(zip(field_names, shp.record))['STATEFP'] == fips
+        ]
+        features = []
+        for shp in district_records:
+            rec = dict(zip(field_names, shp.record))
+            code_key = 'CD{}FP'.format(self.CONGRESS)
+            if int(rec[code_key]) == 0:
+                label = 'At-large congressional district'.format(
+                    ordinal(int(rec[code_key]))
+                )
+            else:
+                label = '{} congressional district'.format(
+                    ordinal(int(rec[code_key]))
+                )
+
+            geometry = shp.shape.__geo_interface__
+            geodata = {
+                'type': 'Feature',
+                'geometry': geometry,
+                'properties': {
+                    'state': rec['STATEFP'],
+                    'district': rec[code_key],
+                    'name': label
+                }
+            }
+            features.append(geodata)
+        threshold = self.THRESHOLDS['district']
         return self.toposimplify(
             geojson.FeatureCollection(features),
             threshold
@@ -230,7 +297,7 @@ class Command(BaseCommand):
         fields = shape.fields[1:]
         field_names = [f[0] for f in fields]
 
-        nation_obj = Division.objects.get(code='00')
+        nation_obj = Division.objects.get(code='00', level=self.NATIONAL_LEVEL)
 
         print('States:')
         for shp in tqdm(shape.shapeRecords()):
@@ -284,6 +351,98 @@ class Command(BaseCommand):
                 series=self.YEAR,
                 defaults={
                     'topojson': self.get_county_shp(state['STATEFP']),
+                },
+            )
+            geojson, created = Geometry.objects.update_or_create(
+                division=state_obj,
+                subdivision_level=self.DISTRICT_LEVEL,
+                simplification=self.THRESHOLDS['district'],
+                source=os.path.join(
+                    SHP_BASE.format(self.YEAR),
+                    'cb_{}_us_cd{}_500k'.format(self.YEAR, self.CONGRESS)
+                ) + '.zip',
+                series=self.YEAR,
+                defaults={
+                    'topojson': self.get_district_shp(state['STATEFP']),
+                },
+            )
+            # print('>  FIPS {}  @ ~{}kb'.format(
+            #     state['STATEFP'],
+            #     round(len(json.dumps(geojson.topojson)) / 1000)
+            # ))
+
+    def create_district_fixtures(self):
+        SHP_SLUG = 'cb_{}_us_cd{}_500k'.format(self.YEAR, self.CONGRESS)
+        DOWNLOAD_PATH = os.path.join(
+            DATA_DIRECTORY,
+            SHP_SLUG
+        )
+
+        shape = shapefile.Reader(os.path.join(
+            DOWNLOAD_PATH,
+            '{}.shp'.format(SHP_SLUG)
+        ))
+        fields = shape.fields[1:]
+        field_names = [f[0] for f in fields]
+
+        print('Districts:')
+        for shp in tqdm(shape.shapeRecords()):
+            district = dict(zip(field_names, shp.record))
+
+            if int(district['STATEFP']) > 56:
+                continue
+
+            state = Division.objects.get(
+                code=district['STATEFP'],
+                level=self.STATE_LEVEL
+            )
+            code_key = 'CD{}FP'.format(self.CONGRESS)
+            if int(district[code_key]) == 0:
+                label = '{} at-large congressional district'.format(
+                    state.label,
+                    ordinal(int(district[code_key]))
+                )
+            else:
+                label = '{} {} congressional district'.format(
+                    state.label,
+                    ordinal(int(district[code_key]))
+                )
+            district_obj, created = Division.objects.update_or_create(
+                code=district[code_key],
+                level=self.DISTRICT_LEVEL,
+                parent=state,
+                defaults={
+                    'name': label,
+                    'label': label,
+                    'code_components': {
+                        'fips': {
+                            'state': state.code,
+                        },
+                        'district': district[code_key]
+                    },
+                }
+            )
+            geodata = {
+                'type': 'Feature',
+                'geometry': shp.shape.__geo_interface__,
+                'properties': {
+                    'state': state.code,
+                    'district': district[code_key],
+                    'name': label
+                }
+            }
+            geojson, created = Geometry.objects.update_or_create(
+                division=district_obj,
+                subdivision_level=self.DISTRICT_LEVEL,
+                simplification=self.THRESHOLDS['district'],
+                source=os.path.join(
+                    SHP_BASE.format(self.YEAR), SHP_SLUG) + '.zip',
+                series=self.YEAR,
+                defaults={
+                    'topojson': self.toposimplify(
+                        geodata,
+                        self.THRESHOLDS['district']
+                    ),
                 },
             )
             # print('>  FIPS {}  @ ~{}kb'.format(
@@ -340,6 +499,14 @@ class Command(BaseCommand):
             help='Specify year of shapefile series (default, 2016)',
         )
         parser.add_argument(
+            '--congress',
+            action='store',
+            dest='congress',
+            default='115',
+            help='Specify congress of district shapefile series \
+             (default, 115)',
+        )
+        parser.add_argument(
             '--states',
             action='store_true',
             dest='states',
@@ -368,6 +535,14 @@ class Command(BaseCommand):
                 (default, 0.05)'
         )
         parser.add_argument(
+            '--districtThreshold',
+            type=check_threshold,
+            default=0.08,
+            dest='districtThreshold',
+            help='Simplification threshold value for district topojson \
+                (default, 0.08)'
+        )
+        parser.add_argument(
             '--countyThreshold',
             type=check_threshold,
             default=0.075,
@@ -379,9 +554,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.get_required_fixtures()
         self.YEAR = options['year']
+        self.CONGRESS = options['congress']
         self.THRESHOLDS = {
             'nation': str(options['nationThreshold']),
             'state': str(options['stateThreshold']),
+            'district': str(options['districtThreshold']),
             'county': str(options['countyThreshold']),
         }
 
@@ -391,9 +568,11 @@ class Command(BaseCommand):
         print('Downloading data')
         self.download_shp_data('state')
         self.download_shp_data('county')
+        self.download_district_data()
 
         print('Creating fixtures')
         self.create_nation_fixtures()
+        self.create_district_fixtures()
         if not options['counties']:
             self.create_state_fixtures()
         if not options['states']:
