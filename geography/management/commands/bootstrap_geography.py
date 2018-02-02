@@ -519,6 +519,12 @@ class Command(BaseCommand):
             help='Just load counties',
         )
         parser.add_argument(
+            '--districts',
+            action='store_true',
+            dest='districts',
+            help='Just load districts',
+        )
+        parser.add_argument(
             '--nationThreshold',
             type=check_threshold,
             default=0.005,
@@ -572,10 +578,11 @@ class Command(BaseCommand):
 
         print('Creating fixtures')
         self.create_nation_fixtures()
-        self.create_district_fixtures()
-        if not options['counties']:
+        if not options['counties'] and not options['districts']:
             self.create_state_fixtures()
-        if not options['states']:
+        if not options['counties'] and not options['states']:
+            self.create_district_fixtures()
+        if not options['states'] and not options['districts']:
             self.create_county_fixtures()
         self.stdout.write(
             self.style.SUCCESS('Done.')
