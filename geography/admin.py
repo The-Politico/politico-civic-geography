@@ -11,10 +11,9 @@ class IntersectRelationshipInline(admin.StackedInline):
 
 class DivisionAdmin(admin.ModelAdmin):
     inlines = (IntersectRelationshipInline,)
-    search_fields = ['name']
     list_display = ('label', 'level', 'code')
     list_filter = ('level',)
-    search_fields = ('code',)
+    search_fields = ('code', 'label')
     readonly_fields = ('parent', 'uid',)
 
 
