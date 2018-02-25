@@ -13,7 +13,7 @@ class DivisionAdmin(admin.ModelAdmin):
     inlines = (IntersectRelationshipInline,)
     list_display = ('label', 'level', 'code')
     list_filter = ('level',)
-    search_fields = ('code',)
+    search_fields = ('code', 'label')
     readonly_fields = ('parent', 'uid',)
 
 
