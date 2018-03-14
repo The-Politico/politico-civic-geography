@@ -1,6 +1,6 @@
 from django.contrib import admin
 from geography.models import (Division, DivisionLevel, Geometry,
-                              IntersectRelationship)
+                              IntersectRelationship, Point, PointLabelOffset)
 
 
 class IntersectRelationshipInline(admin.StackedInline):
@@ -17,7 +17,14 @@ class DivisionAdmin(admin.ModelAdmin):
     readonly_fields = ('parent', 'uid',)
 
 
+class PointInline(admin.StackedInline):
+    model = Point
+    fk_name = 'geometry'
+    extra = 0
+
+
 class GeometryAdmin(admin.ModelAdmin):
+    inlines = (PointInline,)
     list_display = ('division', 'map_level', 'small_preview')
     list_filter = ('subdivision_level',)
     search_fields = ('division__name',)
@@ -43,6 +50,17 @@ class GeometryAdmin(admin.ModelAdmin):
         return obj.subdivision_level.name
 
 
+class PointLabelOffsetInline(admin.StackedInline):
+    model = PointLabelOffset
+    fk_name = 'point'
+    extra = 0
+
+
+class PointAdmin(admin.ModelAdmin):
+    inlines = (PointLabelOffsetInline,)
+
+
 admin.site.register(DivisionLevel)
 admin.site.register(Division, DivisionAdmin)
 admin.site.register(Geometry, GeometryAdmin)
+admin.site.register(Point, PointAdmin)

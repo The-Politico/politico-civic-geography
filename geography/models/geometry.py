@@ -19,7 +19,7 @@ class Geometry(models.Model):
         <script>
         var data{0} = {1};
         var feature{0} = topojson.feature(
-            data{0}, data{0}.objects['-']);
+            data{0}, data{0}.objects['divisions']);
         var svg{0} = d3.select("#map{0}").append("svg")
             .attr("width", {2})
             .attr("height", {2});
@@ -79,6 +79,17 @@ class Geometry(models.Model):
     effective = models.BooleanField(default=True)
     effective_start = models.DateField(null=True, blank=True)
     effective_end = models.DateField(null=True, blank=True)
+
+    def to_topojson(self):
+        topojson = self.topojson
+        topojson['objects']['points'] = {
+            'type': 'GeometryCollection',
+            'geometries': [
+                point.to_topojson()
+                for point in self.points.all()
+            ]
+        }
+        return topojson
 
     class Meta:
         verbose_name_plural = "Geometries"

@@ -15,6 +15,9 @@ from django.core.management.base import BaseCommand, CommandError
 from geography.conf import settings
 from geography.models import Division, DivisionLevel, Geometry
 from tqdm import tqdm
+from tqdm._utils import _term_move_up
+
+tqdm_prefix = _term_move_up() + '\r'
 
 SHP_BASE = 'https://www2.census.gov/geo/tiger/GENZ{}/shp/'
 DATA_DIRECTORY = './tmp/data/geography/'
@@ -135,7 +138,10 @@ class Command(BaseCommand):
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL
         )
-        return json.loads(proc_out.stdout)
+        topojson = json.loads(proc_out.stdout)
+        # Standardize object name
+        topojson['objects']['divisions'] = topojson['objects'].pop('-')
+        return topojson
 
     def get_county_shp(self, fips):
         SHP_SLUG = 'cb_{}_us_county_500k'.format(self.YEAR)
@@ -278,10 +284,12 @@ class Command(BaseCommand):
                 'topojson': self.get_county_shp('00'),
             },
         )
-        # print('>  FIPS {}  @ ~{}kb'.format(
-        #     '00',
-        #     round(len(json.dumps(geo.topojson)) / 1000)
-        # ))
+        tqdm.write('Nation\n')
+        tqdm.write(tqdm_prefix + '>  FIPS {}  @ ~{}kb     '.format(
+            '00',
+            round(len(json.dumps(geo.topojson)) / 1000)
+        ))
+        tqdm.write(self.style.SUCCESS('Done.\n'))
 
     def create_state_fixtures(self):
         SHP_SLUG = 'cb_{}_us_state_500k'.format(self.YEAR)
@@ -299,8 +307,7 @@ class Command(BaseCommand):
 
         nation_obj = Division.objects.get(code='00', level=self.NATIONAL_LEVEL)
 
-        print('States:')
-        for shp in tqdm(shape.shapeRecords()):
+        for shp in tqdm(shape.shapeRecords(), desc='States'):
             state = dict(zip(field_names, shp.record))
             # Skip territories
             if int(state['STATEFP']) > 56:
@@ -366,10 +373,11 @@ class Command(BaseCommand):
                     'topojson': self.get_district_shp(state['STATEFP']),
                 },
             )
-            # print('>  FIPS {}  @ ~{}kb'.format(
-            #     state['STATEFP'],
-            #     round(len(json.dumps(geojson.topojson)) / 1000)
-            # ))
+            tqdm.write(tqdm_prefix + '>  FIPS {}  @ ~{}kb     '.format(
+                state['STATEFP'],
+                round(len(json.dumps(geojson.topojson)) / 1000)
+            ))
+        tqdm.write(self.style.SUCCESS('Done.\n'))
 
     def create_district_fixtures(self):
         SHP_SLUG = 'cb_{}_us_cd{}_500k'.format(self.YEAR, self.CONGRESS)
@@ -385,8 +393,7 @@ class Command(BaseCommand):
         fields = shape.fields[1:]
         field_names = [f[0] for f in fields]
 
-        print('Districts:')
-        for shp in tqdm(shape.shapeRecords()):
+        for shp in tqdm(shape.shapeRecords(), desc='Districts'):
             district = dict(zip(field_names, shp.record))
 
             if int(district['STATEFP']) > 56:
@@ -445,14 +452,17 @@ class Command(BaseCommand):
                     ),
                 },
             )
-            # print('>  FIPS {}  @ ~{}kb'.format(
-            #     state['STATEFP'],
-            #     round(len(json.dumps(geojson.topojson)) / 1000)
-            # ))
+            tqdm.write(
+                tqdm_prefix + '>  FIPS {}, District {}  @ ~{}kb     '.format(
+                    district['STATEFP'],
+                    district[code_key],
+                    round(len(json.dumps(geojson.topojson)) / 1000)
+                )
+            )
+        tqdm.write(self.style.SUCCESS('Done.\n'))
 
     def create_county_fixtures(self):
-        print('Counties:')
-        for county in tqdm(COUNTIES):
+        for county in tqdm(COUNTIES, desc='Counties'):
             if int(county['state']) > 56:
                 continue
             state = Division.objects.get(
@@ -477,10 +487,11 @@ class Command(BaseCommand):
                     }
                 }
             )
-            # print('>  FIPS {}{}'.format(
-            #     county['state'],
-            #     county['county'],
-            # ))
+            tqdm.write(tqdm_prefix + '>  FIPS {}{}     '.format(
+                county['state'],
+                county['county'],
+            ))
+        tqdm.write(self.style.SUCCESS('Done.\n'))
 
     def add_arguments(self, parser):
         def check_threshold(arg):
@@ -571,12 +582,12 @@ class Command(BaseCommand):
         if options['counties'] and options['states']:
             raise CommandError('Can\'t load only counties and only states...')
 
-        print('Downloading data')
+        tqdm.write('Downloading data')
         self.download_shp_data('state')
         self.download_shp_data('county')
         self.download_district_data()
 
-        print('Creating fixtures')
+        tqdm.write('Creating fixtures')
         self.create_nation_fixtures()
         if not options['counties'] and not options['districts']:
             self.create_state_fixtures()
@@ -585,5 +596,5 @@ class Command(BaseCommand):
         if not options['states'] and not options['districts']:
             self.create_county_fixtures()
         self.stdout.write(
-            self.style.SUCCESS('Done.')
+            self.style.SUCCESS('All done! 🏁')
         )
