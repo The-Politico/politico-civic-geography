@@ -28,9 +28,11 @@ setup(
     install_requires=[
         'boto3',
         'census',
-        'django-uuslug',
+        'django',
         'djangorestframework',
+        'dj-database-url'
         'geojson',
+        'psycopg2',
         'pyshp',
         'tqdm',
         'us',
