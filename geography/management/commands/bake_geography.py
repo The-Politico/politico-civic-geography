@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 OUTPUT_PATH = os.path.join(
     settings.AWS_S3_UPLOAD_ROOT,
-    'data/geography'
+    'geography/us-census/cb/500k'
 )
 
 
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             'states',
             nargs='+',
             help="States to export by FIPS code. \
-            Use * to export all geographies."
+            Use 00 to export all geographies."
         )
 
         parser.add_argument(
@@ -50,9 +50,8 @@ class Command(BaseCommand):
         bucket = get_bucket()
 
         STATE_LEVEL = DivisionLevel.objects.get(name=DivisionLevel.STATE)
-
         geometries = None
-        if states[0] == '*':
+        if states[0] == '00':
             geometries = Geometry.objects.filter(
                 series=year, division__level=STATE_LEVEL)
         else:
@@ -69,7 +68,7 @@ class Command(BaseCommand):
             key = os.path.join(
                 OUTPUT_PATH,
                 options['year'],
-                'state',
+                'states',
                 geometry.division.code,
                 '{}.json'.format(geometry.subdivision_level.slug)
             )
