@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='django-politico-civic-geography',
-    version='0.0.0-alpha',
+    name='politico-civic-geography',
+    version='0.1.0',
     description='',
-    url='https://github.com/The-Politico/django-politico-civic-geography',
+    url='https://github.com/The-Politico/politico-civic-geography',
     author='POLITICO interactive news',
     author_email='interactives@politico.com',
     license='MIT',
