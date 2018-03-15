@@ -1,4 +1,3 @@
-import json
 import os
 
 import boto3
@@ -72,11 +71,10 @@ class Command(BaseCommand):
                 geometry.division.code,
                 '{}.json'.format(geometry.subdivision_level.slug)
             )
-            # print(geometry.to_topojson())
             bucket.put_object(
                 Key=key,
                 ACL=settings.AWS_ACL,
-                Body=json.dumps(geometry.to_topojson()),
+                Body=geometry.to_topojson(),
                 CacheControl=settings.AWS_CACHE_HEADER,
                 ContentType='application/json'
             )

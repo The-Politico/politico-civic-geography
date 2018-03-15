@@ -31,6 +31,10 @@ class Point(models.Model):
     label = models.CharField(max_length=250)
 
     def to_topojson(self):
+        offsets = [
+            offset.to_object() for offset
+            in self.offsets.all()
+        ] if len(self.offsets.all()) > 0 else None
         return {
             'type': 'Point',
             'coordinates': [
@@ -41,10 +45,7 @@ class Point(models.Model):
                 'label': self.label,
                 'threshold': self.threshold,
                 'attributes': self.attributes,
-                'offsets': [
-                    offset.to_object() for offset
-                    in self.offsets.all()
-                ],
+                'offsets': offsets,
             }
         }
 
