@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from geography.models import (Division, DivisionLevel, Geometry,
                               IntersectRelationship)

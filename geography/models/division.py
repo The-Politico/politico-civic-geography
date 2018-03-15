@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import uuid
 
 from django.contrib.postgres.fields import JSONField
@@ -131,4 +132,4 @@ class Division(models.Model):
             raise Exception('No intersecting relationship with that division.')
 
     def __str__(self):
-        return self.code
+        return self.name

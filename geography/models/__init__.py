@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # flake8: noqa
 from .division_level import DivisionLevel
 from .division import Division
