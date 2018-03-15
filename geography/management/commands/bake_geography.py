@@ -1,4 +1,3 @@
-import json
 import os
 
 import boto3
@@ -43,7 +42,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        print('Exporting geographies')
+        tqdm.write('Exporting geographies')
 
         states = options['states']
         year = options['year']
@@ -64,7 +63,7 @@ class Command(BaseCommand):
                         series=year
                     )
 
-        for geometry in tqdm(geometries):
+        for geometry in tqdm(geometries, desc='Geometries'):
             key = os.path.join(
                 OUTPUT_PATH,
                 options['year'],
@@ -75,7 +74,7 @@ class Command(BaseCommand):
             bucket.put_object(
                 Key=key,
                 ACL=settings.AWS_ACL,
-                Body=json.dumps(geometry.topojson),
+                Body=geometry.to_topojson(),
                 CacheControl=settings.AWS_CACHE_HEADER,
                 ContentType='application/json'
             )

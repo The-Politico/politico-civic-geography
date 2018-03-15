@@ -19,31 +19,50 @@ class Geometry(models.Model):
         <script>
         var data{0} = {1};
         var feature{0} = topojson.feature(
-            data{0}, data{0}.objects['-']);
+            data{0}, data{0}.objects.divisions);
+        var projection{0} = d3.geoAlbersUsa().scale(1)
+            .fitSize([{2}, {2}], feature{0});
+        var points{0} = data{0}.objects.points ? topojson.feature(
+            data{0}, data{0}.objects.points).features : [];
         var svg{0} = d3.select("#map{0}").append("svg")
             .attr("width", {2})
             .attr("height", {2});
         svg{0}.append("path").datum(feature{0})
             .attr("d", d3.geoPath().projection(
-                d3.geoAlbersUsa().scale(1)
-                .fitSize([{2}, {2}], feature{0})
+                projection{0}
             ));
+        svg{0}.selectAll('circle.c{0}')
+            .data(points{0})
+          .enter().append('circle')
+            .attr('class', 'c{0}')
+            .attr('cx', function(d) {{
+                return projection{0}(d.geometry.coordinates)[0];
+            }})
+            .attr('cy', function(d) {{
+                return projection{0}(d.geometry.coordinates)[1];
+            }})
+            .attr('r', {2} < 100 ? 2 : 4)
+            .attr('fill', 'transparent')
+            .attr('stroke-width', {2} < 100 ? 1 : 2)
+            .attr('stroke', 'orange');
         </script>
     '''
 
     def small_preview(self):
         return mark_safe(
-            self.D3.format(self.pk.hex.replace('-', ''), self.topojson, '60')
+            self.D3.format(
+                self.pk.hex.replace('-', ''), self.to_topojson(), '60')
         )
 
     def large_preview(self):
         return mark_safe(
-            self.D3.format(self.pk.hex.replace('-', ''), self.topojson, '400')
+            self.D3.format(
+                self.pk.hex.replace('-', ''), self.to_topojson(), '400')
         )
 
     def file_size(self):
         return '~{} kB'.format(
-            round(len(json.dumps(self.topojson)) / 1000)
+            round(len(self.to_topojson()) / 1000)
         )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -80,12 +99,24 @@ class Geometry(models.Model):
     effective_start = models.DateField(null=True, blank=True)
     effective_end = models.DateField(null=True, blank=True)
 
+    def to_topojson(self):
+        """Adds points and converts to topojson string."""
+        topojson = self.topojson
+        topojson['objects']['points'] = {
+            'type': 'GeometryCollection',
+            'geometries': [
+                point.to_topojson()
+                for point in self.points.all()
+            ]
+        }
+        return json.dumps(topojson)
+
     class Meta:
         verbose_name_plural = "Geometries"
 
     def __str__(self):
         return '{} - {} map, {}'.format(
             self.division.label,
-            self.division.level.name,
+            self.subdivision_level.name,
             self.simplification
         )
