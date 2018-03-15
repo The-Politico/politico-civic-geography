@@ -131,4 +131,4 @@ class Division(models.Model):
             raise Exception('No intersecting relationship with that division.')
 
     def __str__(self):
-        return self.name
+        return '{}'.format(self.name)
