@@ -4,7 +4,6 @@ import uuid
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.utils.encoding import force_text
 from uuslug import uuslug
 
 from .division_level import DivisionLevel
@@ -133,4 +132,4 @@ class Division(models.Model):
             raise Exception('No intersecting relationship with that division.')
 
     def __str__(self):
-        return force_text(self.name)
+        return self.name
