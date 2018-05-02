@@ -135,7 +135,7 @@ class Division(models.Model):
         if len(self.elections.filter(election_day__date=date)) > 0:
             return True
 
-        for child in self.children:
+        for child in self.children.all():
             if len(child.elections.filter(election_day__date=date)) > 0:
                 return True
 
