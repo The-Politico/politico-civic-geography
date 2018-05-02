@@ -131,5 +131,15 @@ class Division(models.Model):
         except ObjectDoesNotExist:
             raise Exception('No intersecting relationship with that division.')
 
+    def has_elections(self, date):
+        if len(self.elections.filter(election_day__date=date)) > 0:
+            return True
+
+        for child in self.children:
+            if len(child.elections.filter(election_day__date=date)) > 0:
+                return True
+
+        return False
+
     def __str__(self):
         return self.name
