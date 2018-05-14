@@ -69,7 +69,10 @@ class Command(BaseCommand):
                 options['year'],
                 'states',
                 geometry.division.code,
-                '{}.json'.format(geometry.subdivision_level.slug)
+                '{0}-{1}.json'.format(
+                    geometry.division.code,
+                    geometry.subdivision_level.slug
+                )
             )
             bucket.put_object(
                 Key=key,
