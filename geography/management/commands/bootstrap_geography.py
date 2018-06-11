@@ -596,34 +596,37 @@ class Command(BaseCommand):
         tqdm.write(self.style.SUCCESS('Done.\n'))
 
     def create_township_fixtures(self):
-        for township in tqdm(TOWNSHIPS, desc='Counties'):
+        for township in tqdm(TOWNSHIPS, desc='Townships'):
             if int(township['state']) > 56:
                 continue
-            state = Division.objects.get(
-                code=township['state'],
-                level=self.STATE_LEVEL
+            county = Division.objects.get(
+                code='{}{}'.format(township['state'], township['county']),
+                level=self.COUNTY_LEVEL
             )
             Division.objects.update_or_create(
-                level=self.COUNTY_LEVEL,
-                code='{}{}'.format(
+                level=self.TOWNSHIP_LEVEL,
+                code='{}{}{}'.format(
                     township['state'],
-                    township['county']
+                    township['county'],
+                    township['county subdivision']
                 ),
-                parent=state,
+                parent=county,
                 defaults={
                     'name': township['NAME'],
                     'label': township['NAME'],
                     'code_components': {
                         'fips': {
                             'state': township['state'],
-                            'county': township['county']
+                            'county': township['county'],
+                            'subdivision': township['county subdivision']
                         }
                     }
                 }
             )
-            tqdm.write(tqdm_prefix + '>  FIPS {}{}     '.format(
+            tqdm.write(tqdm_prefix + '>  FIPS {}{}{}     '.format(
                 township['state'],
                 township['county'],
+                township['county subdivision']
             ))
         tqdm.write(self.style.SUCCESS('Done.\n'))
 
@@ -713,10 +716,10 @@ class Command(BaseCommand):
             'county': str(options['countyThreshold']),
         }
 
-        # if options['counties'] and options['states']:
-        #     raise CommandError('Can\'t load only counties and only states...')
+        if options['counties'] and options['states']:
+            raise CommandError('Can\'t load only counties and only states...')
 
-        # tqdm.write('Downloading data')
+        tqdm.write('Downloading data')
         self.download_shp_data('state')
         self.download_shp_data('county')
         self.download_district_data()
@@ -732,6 +735,8 @@ class Command(BaseCommand):
             self.create_district_fixtures()
         if not options['states'] and not options['districts']:
             self.create_county_fixtures()
+            self.create_township_fixtures()
+
         self.stdout.write(
             self.style.SUCCESS('All done! 🏁')
         )
