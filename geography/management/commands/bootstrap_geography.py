@@ -31,6 +31,27 @@ for c in COUNTIES:
         COUNTY_LOOKUP[c['state']] = {}
     COUNTY_LOOKUP[c['state']][c['county']] = c['NAME']
 
+TOWNSHIPS = []
+TOWNSHIP_STATES = ['CT', 'MA', 'ME', 'NH', 'RI', 'VT']
+TOWNSHIP_LOOKUP = {}
+for state in TOWNSHIP_STATES:
+    state_codes = us.states.lookup(state)
+
+    for county_fips, name in COUNTY_LOOKUP[state_codes.fips].items():
+        state_townships = census.sf1.get('NAME', geo={
+            'for': 'county subdivision:*',
+            'in': 'state:{} county:{}'.format(state_codes.fips, county_fips)
+        })
+        TOWNSHIPS.extend(state_townships)
+        for t in state_townships:
+            if t['state'] not in TOWNSHIP_LOOKUP:
+                TOWNSHIP_LOOKUP[t['state']] = {}
+
+            if t['county'] not in TOWNSHIP_LOOKUP[t['state']]:
+                TOWNSHIP_LOOKUP[t['state']][t['county']] = {}
+
+            TOWNSHIP_LOOKUP[t['state']][t['county']][t['county subdivision']] = t['NAME'] # noqa
+
 
 class Command(BaseCommand):
     help = (
@@ -56,7 +77,7 @@ class Command(BaseCommand):
         )
 
         # Other fixtures
-        DivisionLevel.objects.get_or_create(
+        self.TOWNSHIP_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.TOWNSHIP,
             parent=self.COUNTY_LEVEL
         )
@@ -108,6 +129,27 @@ class Command(BaseCommand):
             SHP_BASE.format(self.YEAR),
             SHP_SLUG
         )
+        if not Path(ZIPFILE).is_file():
+            with request.urlopen('{}.zip'.format(SHP_PATH)) as response,\
+                    open(ZIPFILE, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+
+        if not Path('{}{}.shp'.format(DOWNLOAD_PATH, SHP_SLUG)).is_file():
+            with zipfile.ZipFile(ZIPFILE, 'r') as file:
+                file.extractall(DOWNLOAD_PATH)
+
+    def download_township_data(self, state_fips):
+        SHP_SLUG = 'cb_2017_{}_cousub_500k'.format(state_fips)
+        DOWNLOAD_PATH = os.path.join(
+            DATA_DIRECTORY,
+            SHP_SLUG
+        )
+        ZIPFILE = '{}{}.zip'.format(DOWNLOAD_PATH, SHP_SLUG)
+        SHP_PATH = os.path.join(
+            SHP_BASE.format('2017'),
+            SHP_SLUG
+        )
+        print(SHP_PATH)
         if not Path(ZIPFILE).is_file():
             with request.urlopen('{}.zip'.format(SHP_PATH)) as response,\
                     open(ZIPFILE, 'wb') as out_file:
@@ -232,6 +274,49 @@ class Command(BaseCommand):
             threshold
         )
 
+    def get_township_shp(self, fips):
+        SHP_SLUG = 'cb_2017_{}_cousub_500k'.format(fips)
+        DOWNLOAD_PATH = os.path.join(
+            DATA_DIRECTORY,
+            SHP_SLUG
+        )
+        shape = shapefile.Reader(os.path.join(
+            DOWNLOAD_PATH,
+            '{}.shp'.format(SHP_SLUG)
+        ))
+        fields = shape.fields[1:]
+        field_names = [f[0] for f in fields]
+        township_records = [
+            shp for shp in shape.shapeRecords()
+            if dict(zip(field_names, shp.record))['STATEFP'] == fips or
+            (
+                fips == '00' and
+                int(dict(zip(field_names, shp.record))['STATEFP']) <= 56
+            )
+        ]
+        features = []
+        for shp in township_records:
+            rec = dict(zip(field_names, shp.record))
+            geometry = shp.shape.__geo_interface__
+            geodata = {
+                'type': 'Feature',
+                'geometry': geometry,
+                'properties': {
+                    'state': rec['STATEFP'],
+                    'county': rec['COUNTYFP'],
+                    'countysub': rec['COUSUBFP'],
+                    'name': TOWNSHIP_LOOKUP[rec['STATEFP']][rec['COUNTYFP']].get(
+                        rec['COUSUBFP'], rec['NAME']
+                    )
+                }
+            }
+            features.append(geodata)
+        threshold = self.THRESHOLDS['county']
+        return self.toposimplify(
+            geojson.FeatureCollection(features),
+            threshold
+        )
+
     def create_nation_fixtures(self):
         """
         Create national US and State Map
@@ -309,6 +394,7 @@ class Command(BaseCommand):
 
         for shp in tqdm(shape.shapeRecords(), desc='States'):
             state = dict(zip(field_names, shp.record))
+            postal = us.states.lookup(state['STATEFP']).abbr
             # Skip territories
             if int(state['STATEFP']) > 56:
                 continue
@@ -323,7 +409,7 @@ class Command(BaseCommand):
                         'fips': {
                             'state': state['STATEFP'],
                         },
-                        'postal': us.states.lookup(state['STATEFP']).abbr,
+                        'postal': postal,
                     },
                 }
             )
@@ -373,6 +459,22 @@ class Command(BaseCommand):
                     'topojson': self.get_district_shp(state['STATEFP']),
                 },
             )
+
+            if postal in TOWNSHIP_STATES:
+                geojson, created = Geometry.objects.update_or_create(
+                    division=state_obj,
+                    subdivision_level=self.TOWNSHIP_LEVEL,
+                    simplification=self.THRESHOLDS['county'],
+                    source=os.path.join(
+                        SHP_BASE.format(self.YEAR),
+                        'cb_2017_{}_cousub_500k'.format(state['STATEFP'])
+                    ) + '.zip',
+                    series=self.YEAR,
+                    defaults={
+                        'topojson': self.get_township_shp(state['STATEFP']),
+                    },
+                )
+
             tqdm.write(tqdm_prefix + '>  FIPS {}  @ ~{}kb     '.format(
                 state['STATEFP'],
                 round(len(json.dumps(geojson.topojson)) / 1000)
@@ -493,6 +595,38 @@ class Command(BaseCommand):
             ))
         tqdm.write(self.style.SUCCESS('Done.\n'))
 
+    def create_township_fixtures(self):
+        for township in tqdm(TOWNSHIPS, desc='Counties'):
+            if int(township['state']) > 56:
+                continue
+            state = Division.objects.get(
+                code=township['state'],
+                level=self.STATE_LEVEL
+            )
+            Division.objects.update_or_create(
+                level=self.COUNTY_LEVEL,
+                code='{}{}'.format(
+                    township['state'],
+                    township['county']
+                ),
+                parent=state,
+                defaults={
+                    'name': township['NAME'],
+                    'label': township['NAME'],
+                    'code_components': {
+                        'fips': {
+                            'state': township['state'],
+                            'county': township['county']
+                        }
+                    }
+                }
+            )
+            tqdm.write(tqdm_prefix + '>  FIPS {}{}     '.format(
+                township['state'],
+                township['county'],
+            ))
+        tqdm.write(self.style.SUCCESS('Done.\n'))
+
     def add_arguments(self, parser):
         def check_threshold(arg):
             value = float(arg)
@@ -579,13 +713,16 @@ class Command(BaseCommand):
             'county': str(options['countyThreshold']),
         }
 
-        if options['counties'] and options['states']:
-            raise CommandError('Can\'t load only counties and only states...')
+        # if options['counties'] and options['states']:
+        #     raise CommandError('Can\'t load only counties and only states...')
 
-        tqdm.write('Downloading data')
+        # tqdm.write('Downloading data')
         self.download_shp_data('state')
         self.download_shp_data('county')
         self.download_district_data()
+        for state in TOWNSHIP_STATES:
+            fips = us.states.lookup(state).fips
+            self.download_township_data(fips)
 
         tqdm.write('Creating fixtures')
         self.create_nation_fixtures()
