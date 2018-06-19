@@ -26,7 +26,7 @@ class PointInline(admin.StackedInline):
 
 class GeometryAdmin(admin.ModelAdmin):
     inlines = (PointInline,)
-    list_display = ('division', 'map_level', 'small_preview')
+    list_display = ('division', 'map_level')
     list_filter = ('subdivision_level',)
     search_fields = ('division__name',)
     readonly_fields = ('file_size', 'large_preview', 'source', 'series',)

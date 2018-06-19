@@ -44,7 +44,7 @@ class Geometry(models.Model):
             .attr('r', {2} < 100 ? 2 : 4)
             .attr('fill', 'transparent')
             .attr('stroke-width', {2} < 100 ? 1 : 2)
-            .attr('stroke', 'white');
+            .attr('stroke', 'black');
         svg{0}.selectAll('text.t{0}')
             .data(points{0})
         .enter().append('text')
@@ -67,7 +67,7 @@ class Geometry(models.Model):
 
                 return projection{0}(d.geometry.coordinates)[1] + offset;
             }})
-            .attr('fill', 'white')
+            .attr('fill', 'black')
             .attr('text-anchor', 'end');
         </script>
     '''

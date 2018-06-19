@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='politico-civic-geography',
-    version="0.3.5",
+    version="0.3.6",
     description='',
     url='https://github.com/The-Politico/politico-civic-geography',
     author='POLITICO interactive news',
