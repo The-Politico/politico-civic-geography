@@ -149,7 +149,6 @@ class Command(BaseCommand):
             SHP_BASE.format('2017'),
             SHP_SLUG
         )
-        print(SHP_PATH)
         if not Path(ZIPFILE).is_file():
             with request.urlopen('{}.zip'.format(SHP_PATH)) as response,\
                     open(ZIPFILE, 'wb') as out_file:
@@ -297,6 +296,9 @@ class Command(BaseCommand):
         features = []
         for shp in township_records:
             rec = dict(zip(field_names, shp.record))
+            if rec['COUSUBFP'] == '00000':
+                continue
+
             geometry = shp.shape.__geo_interface__
             geodata = {
                 'type': 'Feature',
@@ -597,6 +599,9 @@ class Command(BaseCommand):
 
     def create_township_fixtures(self):
         for township in tqdm(TOWNSHIPS, desc='Townships'):
+            if township['county subdivision'] == '00000':
+                continue
+
             if int(township['state']) > 56:
                 continue
             county = Division.objects.get(
@@ -673,6 +678,12 @@ class Command(BaseCommand):
             help='Just load districts',
         )
         parser.add_argument(
+            '--townships',
+            action='store_true',
+            dest='townships',
+            help='Just load townships',
+        )
+        parser.add_argument(
             '--nationThreshold',
             type=check_threshold,
             default=0.005,
@@ -729,12 +740,13 @@ class Command(BaseCommand):
 
         tqdm.write('Creating fixtures')
         self.create_nation_fixtures()
-        if not options['counties'] and not options['districts']:
+        if not options['counties'] and not options['districts'] and not options['townships']:
             self.create_state_fixtures()
-        if not options['counties'] and not options['states']:
+        if not options['counties'] and not options['states'] and not options['townships']:
             self.create_district_fixtures()
-        if not options['states'] and not options['districts']:
+        if not options['states'] and not options['districts'] and not options['townships']:
             self.create_county_fixtures()
+        if not options['states'] and not options['counties'] and not options['districts']:
             self.create_township_fixtures()
 
         self.stdout.write(
