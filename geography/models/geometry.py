@@ -20,7 +20,7 @@ class Geometry(models.Model):
         var data{0} = {1};
         var feature{0} = topojson.feature(
             data{0}, data{0}.objects.divisions);
-        var projection{0} = d3.geoAlbersUsa().scale(1)
+        var projection{0} = d3.geoMercator().scale(1)
             .fitSize([{2}, {2}], feature{0});
         var points{0} = data{0}.objects.points ? topojson.feature(
             data{0}, data{0}.objects.points).features : [];
