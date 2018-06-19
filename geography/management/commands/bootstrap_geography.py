@@ -740,13 +740,17 @@ class Command(BaseCommand):
 
         tqdm.write('Creating fixtures')
         self.create_nation_fixtures()
-        if not options['counties'] and not options['districts'] and not options['townships']:
+        if (not options['counties'] and not options['districts']
+                and not options['townships']):
             self.create_state_fixtures()
-        if not options['counties'] and not options['states'] and not options['townships']:
+        if (not options['counties'] and not options['states']
+                and not options['townships']):
             self.create_district_fixtures()
-        if not options['states'] and not options['districts'] and not options['townships']:
+        if (not options['states'] and not options['districts']
+                and not options['townships']):
             self.create_county_fixtures()
-        if not options['states'] and not options['counties'] and not options['districts']:
+        if (not options['states'] and not options['counties']
+                and not options['districts']):
             self.create_township_fixtures()
 
         self.stdout.write(
