@@ -4,6 +4,15 @@ from geography.models import (Division, DivisionLevel, Geometry,
                               IntersectRelationship, Point, PointLabelOffset)
 
 
+def custom_titled_filter(title):
+    class Wrapper(admin.FieldListFilter):
+        def __new__(cls, *args, **kwargs):
+            instance = admin.FieldListFilter.create(*args, **kwargs)
+            instance.title = title
+            return instance
+    return Wrapper
+
+
 class IntersectRelationshipInline(admin.StackedInline):
     model = IntersectRelationship
     fk_name = 'from_division'
@@ -17,6 +26,23 @@ class DivisionAdmin(admin.ModelAdmin):
     search_fields = ('code', 'label')
     readonly_fields = ('parent', 'uid',)
 
+    fieldsets = (
+        ('Names', {
+            'fields': ('name', 'label', 'short_label')
+        }),
+        ('Reference codes', {
+            'fields': ('code', 'code_components')
+        }),
+        ('In effect', {
+            'fields': (
+                'effective', 'effective_start', 'effective_end',
+            )
+        }),
+        ('Reference fields', {
+            'fields': ('parent', 'uid')
+        })
+    )
+
 
 class PointInline(admin.StackedInline):
     model = Point
@@ -27,7 +53,7 @@ class PointInline(admin.StackedInline):
 class GeometryAdmin(admin.ModelAdmin):
     inlines = (PointInline,)
     list_display = ('division', 'map_level')
-    list_filter = ('subdivision_level',)
+    list_filter = (('subdivision_level', custom_titled_filter('map level')), )
     search_fields = ('division__name',)
     readonly_fields = ('file_size', 'large_preview', 'source', 'series',)
 
