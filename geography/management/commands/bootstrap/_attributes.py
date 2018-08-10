@@ -1,0 +1,38 @@
+from geography.models import Division, DivisionLevel
+
+
+class Attributes(object):
+    def set_attributes(self):
+        self.NATIONAL_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.COUNTRY
+        )
+        self.STATE_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.STATE,
+            parent=self.NATIONAL_LEVEL
+        )
+        self.DISTRICT_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.DISTRICT,
+            parent=self.STATE_LEVEL
+        )
+        self.COUNTY_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.COUNTY,
+            parent=self.STATE_LEVEL
+        )
+
+        # Other fixtures
+        self.TOWNSHIP_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.TOWNSHIP,
+            parent=self.COUNTY_LEVEL
+        )
+        self.PRECINCT_LEVEL = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.PRECINCT,
+            parent=self.COUNTY_LEVEL
+        )
+
+        self.NATION, created = Division.objects.get_or_create(
+            code='00',
+            name='United States of America',
+            label='United States of America',
+            short_label='USA',
+            level=self.NATIONAL_LEVEL,
+        )

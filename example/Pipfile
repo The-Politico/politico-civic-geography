@@ -20,6 +20,8 @@ dj-database-url = "*"
 "psycopg2" = "*"
 geography = {path = "./..", editable = true}
 ipython = "*"
+stringcase = "*"
+dictobject = "*"
 
 
 [dev-packages]
