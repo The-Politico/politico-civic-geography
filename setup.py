@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='politico-civic-geography',
-    version="0.4.1",
+    version="0.4.2",
     description='',
     url='https://github.com/The-Politico/politico-civic-geography',
     author='POLITICO interactive news',
@@ -29,12 +29,14 @@ setup(
     install_requires=[
         'boto3',
         'census',
+        'DictObject',
         'django',
         'djangorestframework',
         'dj-database-url',
         'geojson',
         'psycopg2',
         'pyshp',
+        'stringcase',
         'tqdm',
         'us',
     ],

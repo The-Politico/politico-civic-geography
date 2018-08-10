@@ -1,17 +1,18 @@
-import geojson
 import json
-import shapefile
 import os
 import subprocess
-
 from datetime import date
+
+from tqdm import tqdm
+
+import geojson
+import shapefile
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.core.management.base import BaseCommand
 from geography.models import Division, DivisionLevel, Geometry
-from tqdm import tqdm
 
 SHP_BASE = 'http://www.pacourts.us/assets/files/setting-6061/file-6845.zip'
-SHP_SLUG = 'clipped_penn'
+SHP_SLUG = 'clipped_pa'
 STATE_LEVEL = DivisionLevel.STATE
 
 
@@ -44,7 +45,7 @@ class Command(BaseCommand):
 
     def get_district_shp(self):
         cmd_path = os.path.dirname(os.path.realpath(__file__))
-        pa_path = os.path.join(cmd_path, '../../bin/clipped_penn')
+        pa_path = os.path.join(cmd_path, '../../bin/pa')
 
         shape = shapefile.Reader(os.path.join(
             pa_path,
@@ -75,7 +76,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         cmd_path = os.path.dirname(os.path.realpath(__file__))
-        pa_path = os.path.join(cmd_path, '../../bin/clipped_penn')
+        pa_path = os.path.join(cmd_path, '../../bin/pa')
 
         shape = shapefile.Reader(os.path.join(
             pa_path,
