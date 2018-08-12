@@ -1,12 +1,7 @@
 from tqdm import tqdm
-from tqdm._utils import _term_move_up
 
 from geography.models import Division
 from geography.utils.lookups import counties
-
-tqdm_prefix = _term_move_up() + '\r'
-SHP_BASE = 'https://www2.census.gov/geo/tiger/GENZ{}/shp/'
-DATA_DIRECTORY = './tmp/data/geography/'
 
 
 class CountyFixtures(object):
@@ -36,7 +31,7 @@ class CountyFixtures(object):
                     }
                 }
             )
-            tqdm.write(tqdm_prefix + '>  FIPS {}{}     '.format(
+            tqdm.write(self.TQDM_PREFIX + '>  FIPS {}{}     '.format(
                 county['state'],
                 county['county'],
             ))

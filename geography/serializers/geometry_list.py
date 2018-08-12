@@ -11,8 +11,4 @@ class GeometryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Geometry
-        fields = (
-            'id',
-            'division',
-            'subdivision_level',
-        )
+        fields = ("id", "division", "subdivision_level")

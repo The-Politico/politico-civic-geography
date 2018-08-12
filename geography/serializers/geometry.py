@@ -5,4 +5,4 @@ from rest_framework import serializers
 class GeometrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Geometry
-        fields = '__all__'
+        fields = "__all__"

@@ -11,34 +11,38 @@ class DivisionLevel(models.Model):
     For example, federal, state, district, county, precinct, municipal.
     """
 
-    COUNTRY = 'country'
-    STATE = 'state'
-    DISTRICT = 'district'
-    COUNTY = 'county'
-    TOWNSHIP = 'township'
-    PRECINCT = 'precinct'
+    COUNTRY = "country"
+    STATE = "state"
+    DISTRICT = "district"
+    COUNTY = "county"
+    TOWNSHIP = "township"
+    PRECINCT = "precinct"
 
     LEVEL_CHOICES = (
-        (COUNTRY, 'Country'),
-        (STATE, 'State'),
-        (DISTRICT, 'District'),
-        (COUNTY, 'County'),
-        (TOWNSHIP, 'Township'),
-        (PRECINCT, 'Precinct'),
+        (COUNTRY, "Country"),
+        (STATE, "State"),
+        (DISTRICT, "District"),
+        (COUNTY, "County"),
+        (TOWNSHIP, "Township"),
+        (PRECINCT, "Precinct"),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     uid = models.CharField(max_length=500, editable=False, blank=True)
 
     slug = models.SlugField(
-        blank=True, max_length=255, unique=True, editable=False)
+        blank=True, max_length=255, unique=True, editable=False
+    )
 
     name = models.CharField(max_length=255, unique=True, choices=LEVEL_CHOICES)
 
     parent = models.ForeignKey(
-        'self', null=True, blank=True,
+        "self",
+        null=True,
+        blank=True,
         on_delete=models.SET_NULL,
-        related_name='children')
+        related_name="children",
+    )
 
     def save(self, *args, **kwargs):
         """

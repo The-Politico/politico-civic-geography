@@ -4,12 +4,14 @@
 
 Manage political geographic and spatial data, the POLITICO way.
 
+Creates a complete set of political geometries as topojson for export to S3 or to interact with in your database.
+
 ### Quickstart
 
 1. Install the app.
 
   ```
-  $ pip install django-politico-civic-geography
+  $ pip install politico-civic-geography
   ```
 
 2. Add the app to your Django project and configure settings.
@@ -61,6 +63,10 @@ Use the `--help` flag to see additional options.
 ```
 $ npm install -g topojson
 ```
+
+##### Exceptions
+
+In exceptional cases, we may need to overwrite the geometry of a particular devision
 
 ### Publishing geography to S3
 

@@ -14,14 +14,19 @@ python_version = "3.6"
 
 pytest = "*"
 "flake8" = "*"
-django = ">=2.0"
+Django = ">=2.0"
 djangorestframework = "*"
 dj-database-url = "*"
 "psycopg2" = "*"
 geography = {path = "./..", editable = true}
 ipython = "*"
 stringcase = "*"
-dictobject = "*"
+DictObject = "*"
+Shapely = "*"
+yapf = "*"
+Sphinx = "*"
+sphinxcontrib-django = "*"
+sphinx_rtd_theme = "*"
 
 
 [dev-packages]

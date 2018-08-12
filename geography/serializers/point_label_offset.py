@@ -5,4 +5,4 @@ from rest_framework import serializers
 class PointLabelOffsetSerializer(serializers.ModelSerializer):
     class Meta:
         model = PointLabelOffset
-        fields = '__all__'
+        fields = "__all__"

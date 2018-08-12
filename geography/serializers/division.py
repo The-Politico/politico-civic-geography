@@ -5,4 +5,4 @@ from rest_framework import serializers
 class DivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Division
-        fields = '__all__'
+        fields = "__all__"

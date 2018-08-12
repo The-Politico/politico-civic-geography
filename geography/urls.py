@@ -6,12 +6,10 @@ from .viewsets import (DivisionLevelViewSet, DivisionViewSet, GeometryViewSet,
 
 router = routers.DefaultRouter()
 
-router.register(r'divisions', DivisionViewSet)
-router.register(r'geometries', GeometryViewSet)
-router.register(r'division-levels', DivisionLevelViewSet)
-router.register(r'point-label-offsets', PointLabelOffsetViewSet)
-router.register(r'points', PointViewSet)
+router.register(r"divisions", DivisionViewSet)
+router.register(r"geometries", GeometryViewSet)
+router.register(r"division-levels", DivisionLevelViewSet)
+router.register(r"point-label-offsets", PointLabelOffsetViewSet)
+router.register(r"points", PointViewSet)
 
-urlpatterns = [
-    path('api/', include(router.urls)),
-]
+urlpatterns = [path("api/", include(router.urls))]

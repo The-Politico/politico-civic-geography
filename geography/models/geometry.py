@@ -14,7 +14,8 @@ class Geometry(models.Model):
     """
     The spatial representation (in topoJSON) of a Division.
     """
-    D3 = '''
+
+    D3 = """
         <div id="map{0}"></div>
         <script>
         var data{0} = {1};
@@ -70,53 +71,50 @@ class Geometry(models.Model):
             .attr('fill', 'black')
             .attr('text-anchor', 'end');
         </script>
-    '''
+    """
 
     def small_preview(self):
         return mark_safe(
             self.D3.format(
-                self.pk.hex.replace('-', ''), self.to_topojson(), '60')
+                self.pk.hex.replace("-", ""), self.to_topojson(), "60"
+            )
         )
 
     def large_preview(self):
         return mark_safe(
             self.D3.format(
-                self.pk.hex.replace('-', ''), self.to_topojson(), '400')
+                self.pk.hex.replace("-", ""), self.to_topojson(), "400"
+            )
         )
 
     def file_size(self):
-        return '~{} kB'.format(
-            round(len(self.to_topojson()) / 1000)
-        )
+        return "~{} kB".format(round(len(self.to_topojson()) / 1000))
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     division = models.ForeignKey(
-        Division,
-        on_delete=models.CASCADE,
-        related_name="geometries"
+        Division, on_delete=models.CASCADE, related_name="geometries"
     )
     subdivision_level = models.ForeignKey(
-        DivisionLevel,
-        on_delete=models.PROTECT,
-        related_name="+"
+        DivisionLevel, on_delete=models.PROTECT, related_name="+"
     )
     simplification = models.FloatField(
-        validators=[
-            MinValueValidator(0.0),
-            MaxValueValidator(1.0)
-        ],
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
         help_text="Minimum quantile of planar \
-        triangle areas for simplfying topojson."
+        triangle areas for simplfying topojson.",
     )
     topojson = JSONField()
 
     source = models.URLField(
-        blank=True, null=True,
-        help_text="Link to the source of this geography data.")
+        blank=True,
+        null=True,
+        help_text="Link to the source of this geography data.",
+    )
 
     series = models.CharField(
-        blank=True, null=True, max_length=4,
-        help_text="Year of boundary series, e.g., 2016 TIGER/Line files."
+        blank=True,
+        null=True,
+        max_length=4,
+        help_text="Year of boundary series, e.g., 2016 TIGER/Line files.",
     )
 
     effective = models.BooleanField(default=True)
@@ -126,12 +124,9 @@ class Geometry(models.Model):
     def to_topojson(self):
         """Adds points and converts to topojson string."""
         topojson = self.topojson
-        topojson['objects']['points'] = {
-            'type': 'GeometryCollection',
-            'geometries': [
-                point.to_topojson()
-                for point in self.points.all()
-            ]
+        topojson["objects"]["points"] = {
+            "type": "GeometryCollection",
+            "geometries": [point.to_topojson() for point in self.points.all()],
         }
         return json.dumps(topojson)
 
@@ -139,8 +134,8 @@ class Geometry(models.Model):
         verbose_name_plural = "Geometries"
 
     def __str__(self):
-        return '{} - {} map, {}'.format(
+        return "{} - {} map, {}".format(
             self.division.label,
             self.subdivision_level.name,
-            self.simplification
+            self.simplification,
         )

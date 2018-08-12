@@ -8,7 +8,7 @@ census = Census(settings.CENSUS_API_KEY)
 ############
 # COUNTIES
 
-counties = census.sf1.get('NAME', geo={'for': 'county:*'})
+counties = census.sf1.get("NAME", geo={"for": "county:*"})
 county_lookup = DictObject({})
 
 for county in counties:
@@ -21,17 +21,22 @@ for county in counties:
 # TOWNSHIPS
 
 townships = []
-township_states = ['CT', 'MA', 'ME', 'NH', 'RI', 'VT']
+township_states = ["CT", "MA", "ME", "NH", "RI", "VT"]
 township_lookup = DictObject({})
 
 for state in township_states:
     state_codes = us.states.lookup(state)
 
     for county_fips, name in county_lookup[state_codes.fips].items():
-        state_townships = census.sf1.get('NAME', geo={
-            'for': 'county subdivision:*',
-            'in': 'state:{} county:{}'.format(state_codes.fips, county_fips)
-        })
+        state_townships = census.sf1.get(
+            "NAME",
+            geo={
+                "for": "county subdivision:*",
+                "in": "state:{} county:{}".format(
+                    state_codes.fips, county_fips
+                ),
+            },
+        )
         townships.extend(state_townships)
         for township in state_townships:
             t = DictObject(township)
