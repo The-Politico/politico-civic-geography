@@ -37,7 +37,7 @@ parso==0.3.1
 pexpect==4.6.0
 pickleshare==0.7.4
 pluggy==0.7.1
--e git+git@github.com:The-Politico/politico-civic-geography.git@68e0af5b4ac76e34b0fd0e124e28364ec223fa9c#egg=politico_civic_geography
+politico-civic-geography
 prompt-toolkit==1.0.15
 psycopg2==2.7.5
 ptyprocess==0.6.0
