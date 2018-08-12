@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-from .geography import __version__
+from geography import __version__
 
 setup(
     name="politico-civic-geography",
