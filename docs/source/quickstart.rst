@@ -34,10 +34,13 @@ Configure
     GEOGRAPHY_AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     GEOGRAPHY_AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
     GEOGRAPHY_AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
-    GEOGRAPHY_AWS_REGION = "us-east-1"
-    GEOGRAPHY_AWS_S3_UPLOAD_ROOT = "election-results/cdn"
-    GEOGRAPHY_AWS_ACL = "public-read"
-    GEOGRAPHY_AWS_CACHE_HEADER = "max-age=3600"
+    GEOGRAPHY_AWS_REGION = "us-east-1" # default
+    GEOGRAPHY_AWS_S3_UPLOAD_ROOT = "elections" # default
+    GEOGRAPHY_AWS_ACL = "public-read" # default
+    GEOGRAPHY_AWS_CACHE_HEADER = "max-age=3600" # default
+    GEOGRAPHY_API_AUTHENTICATION_CLASS = "rest_framework.authentication.BasicAuthentication" # default
+    GEOGRAPHY_API_PERMISSION_CLASS = "rest_framework.permissions.IsAdminUser" # default
+    GEOGRAPHY_API_PAGINATION_CLASS = "geography.pagination.ResultsPagination" # default
 
 2. Add the app to your project's urlconf.
 
@@ -62,6 +65,8 @@ Bootstrap your database with geographic data from the U.S. Census Bureau. Runnin
 
 
 See :ref:`management` for more details on using this command and on baking geometry TopoJSON files to AWS S3.
+
+.. image:: images/bootstrap.png
 
 Run
 ---

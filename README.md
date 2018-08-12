@@ -1,10 +1,12 @@
 ![POLITICO](https://rawgithub.com/The-Politico/src/master/images/logo/badge.png)
 
-# django-politico-civic-geography
+# politico-civic-geography
 
 Manage political geographic and spatial data, the POLITICO way.
 
-Creates a complete set of political geometries as topojson for export to S3 or to interact with in your database.
+Creates a complete set of political geometries as topojson for export to AWS S3 or to interact with in your database.
+
+[Read the docs.](https://politico-civic-geography.readthedocs.io)
 
 ### Quickstart
 
@@ -19,24 +21,24 @@ Creates a complete set of political geometries as topojson for export to S3 or t
   ```python
   INSTALLED_APPS = [
       # ...
-      'rest_framework',
-      'geography',
+      "rest_framework",
+      "geography",
   ]
 
   #########################
   # geography settings
 
-  CENSUS_API_KEY = ''
-  GEOGRAPHY_AWS_ACCESS_KEY_ID = ''
-  GEOGRAPHY_AWS_SECRET_ACCESS_KEY = ''
-  GEOGRAPHY_AWS_REGION = 'us-east-1' # default
-  GEOGRAPHY_AWS_S3_BUCKET = ''
-  GEOGRAPHY_S3_UPLOAD_ROOT = 'elections' # default
-  GEOGRAPHY_AWS_ACL = 'public-read' # default
-  GEOGRAPHY_AWS_CACHE_HEADER = 'max-age=31536000' # default
-  GEOGRAPHY_API_AUTHENTICATION_CLASS = 'rest_framework.authentication.BasicAuthentication' # default
-  GEOGRAPHY_API_PERMISSION_CLASS = 'rest_framework.permissions.IsAdminUser' # default
-  GEOGRAPHY_API_PAGINATION_CLASS = 'geography.pagination.ResultsPagination' # default
+  CENSUS_API_KEY = ""
+  GEOGRAPHY_AWS_ACCESS_KEY_ID = ""
+  GEOGRAPHY_AWS_SECRET_ACCESS_KEY = ""
+  GEOGRAPHY_AWS_S3_BUCKET = ""
+  GEOGRAPHY_AWS_REGION = "us-east-1" # default
+  GEOGRAPHY_AWS_S3_UPLOAD_ROOT = "elections" # default
+  GEOGRAPHY_AWS_ACL = "public-read" # default
+  GEOGRAPHY_AWS_CACHE_HEADER = "max-age=3600" # default
+  GEOGRAPHY_API_AUTHENTICATION_CLASS = "rest_framework.authentication.BasicAuthentication" # default
+  GEOGRAPHY_API_PERMISSION_CLASS = "rest_framework.permissions.IsAdminUser" # default
+  GEOGRAPHY_API_PAGINATION_CLASS = "geography.pagination.ResultsPagination" # default
 
   ```
 
@@ -64,16 +66,12 @@ Use the `--help` flag to see additional options.
 $ npm install -g topojson
 ```
 
-##### Exceptions
-
-In exceptional cases, we may need to overwrite the geometry of a particular devision
-
 ### Publishing geography to S3
 
-You can publish your geometries as topojson to an S3 bucket with this command.
+You can publish your geometries as topojson to an S3 bucket with this command. Give it a state FIPS code to bake out the geometry for that state, or use :code:`00` to bake all states.
 
 ```
-$ python manage.py bake_geography
+$ python manage.py bake_geography 00
 ```
 
 
@@ -108,4 +106,12 @@ Move into the example directory, install dependencies and run the development se
   ```
   $ cd example
   $ pipenv run python manage.py migrate
+  ```
+
+##### Developing the docs
+
+Within a pipenv shell, navigate to the docs directory and run the docs development server.
+
+```
+$ make livehtml
   ```
