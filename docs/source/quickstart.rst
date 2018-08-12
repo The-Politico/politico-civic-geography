@@ -71,7 +71,7 @@ See :ref:`management` for more details on using this command and on baking geome
 Run
 ---
 
-Start the server to see your new fixture in Django's admin.
+Start the server to see your new fixtures in Django's admin.
 
 .. code:: shell
 
