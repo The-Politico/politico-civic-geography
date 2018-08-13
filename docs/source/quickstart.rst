@@ -53,6 +53,11 @@ Configure
         path('geography', include('geography.urls')),
     ]
 
+3. Migrate you DB.
+
+  .. code:: shell
+
+    $ python manage.py migrate
 
 Bootstrap
 ---------

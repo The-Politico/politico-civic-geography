@@ -18,3 +18,11 @@ Geography models represent all geographic political divisions in the United Stat
 :code:`IntersectRelationship`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: geography.models.IntersectRelationship
+
+:code:`Point`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: geography.models.Point
+
+:code:`PointLabelOffset`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: geography.models.PointLabelOffset
