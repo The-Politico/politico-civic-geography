@@ -21,8 +21,8 @@ class DistrictFixtures(object):
 
         for shp in tqdm(shape.shapeRecords(), desc="Districts"):
             district = dict(zip(field_names, shp.record))
-
-            if int(district["STATEFP"]) > 56:
+            # Skip territories and DC
+            if int(district["STATEFP"]) > 56 or int(district["STATEFP"]) == 11:
                 continue
 
             state = Division.objects.get(
