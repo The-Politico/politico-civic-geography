@@ -9,21 +9,17 @@ from geography.models import Division, Geometry
 
 class DistrictGeometries(object):
     def bake_district_geometries(self):
-        district_geometries = None
+        district_geometries = Geometry.objects.none()
         if self.STATES[0] == "00":
             district_geometries = Geometry.objects.filter(
                 series=self.YEAR, division__level=self.DISTRICT_LEVEL
             )
         else:
             for state in self.STATES:
-                division = Division.objects.get(
+                divisions = Division.objects.filter(
                     level=self.DISTRICT_LEVEL, parent__code=state
                 )
-                if not district_geometries:
-                    district_geometries = division.geometries.filter(
-                        series=self.YEAR
-                    )
-                else:
+                for division in divisions:
                     district_geometries = (
                         district_geometries
                         | division.geometries.filter(series=self.YEAR)
