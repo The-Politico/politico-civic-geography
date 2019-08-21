@@ -1,15 +1,35 @@
-from setuptools import find_packages, setup
+# Imports from python.
+import os
+from setuptools import find_packages
+from setuptools import setup
 
+
+# Imports from geography.
 from geography import __version__
+
+
+REPO_URL = "https://github.com/The-Politico/politico-civic-geography/"
+
+PYPI_VERSION = ".".join(str(v) for v in __version__)
+
+with open(os.path.join(os.path.dirname(__file__), "README.md")) as readme:
+    README = readme.read()
+
 
 setup(
     name="politico-civic-geography",
-    version=__version__,
-    description="",
-    url="https://github.com/The-Politico/politico-civic-geography",
+    version=PYPI_VERSION,
+    packages=find_packages(exclude=["docs", "tests", "example"]),
+    include_package_data=True,
+    license="MIT",
+    description=(
+        "Manage political geographic and spatial data, the POLITICO way."
+    ),
+    long_description=README,
+    long_description_content_type="text/markdown",
+    url=REPO_URL,
     author="POLITICO interactive news",
     author_email="interactives@politico.com",
-    license="MIT",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Framework :: Django",
@@ -24,8 +44,6 @@ setup(
         "Topic :: Internet :: WWW/HTTP",
     ],
     keywords="",
-    include_package_data=True,
-    packages=find_packages(exclude=["docs", "tests", "example"]),
     install_requires=[
         "boto3",
         "census",
@@ -34,7 +52,8 @@ setup(
         "djangorestframework",
         "dj-database-url",
         "geojson",
-        "psycopg2",
+        "psycopg2-binary",
+        "politico-civic-utils",
         "pyshp",
         "shapely",
         "stringcase",

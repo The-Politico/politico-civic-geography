@@ -19,6 +19,7 @@ djangorestframework = "*"
 dj-database-url = "*"
 "psycopg2" = "*"
 geography = {path = "./..", editable = true}
+politico-civic-utils = "*"
 ipython = "*"
 stringcase = "*"
 DictObject = "*"
@@ -30,4 +31,3 @@ sphinx_rtd_theme = "*"
 
 
 [dev-packages]
-
