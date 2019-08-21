@@ -14,20 +14,19 @@ python_version = "3.6"
 
 pytest = "*"
 "flake8" = "*"
-Django = ">=2.0"
+Django = ">=2.2"
 djangorestframework = "*"
 dj-database-url = "*"
-"psycopg2" = "*"
+"psycopg2-binary" = "*"
 geography = {path = "./..", editable = true}
-politico-civic-utils = "*"
-ipython = "*"
 stringcase = "*"
 DictObject = "*"
 Shapely = "*"
-yapf = "*"
-Sphinx = "*"
-sphinxcontrib-django = "*"
-sphinx_rtd_theme = "*"
+civic_utils = {editable = true,path = "./../../utils"}
 
 
 [dev-packages]
+ipython = "*"
+Sphinx = "*"
+sphinxcontrib-django = "*"
+sphinx_rtd_theme = "*"
