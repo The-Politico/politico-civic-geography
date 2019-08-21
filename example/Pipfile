@@ -22,7 +22,7 @@ geography = {path = "./..", editable = true}
 stringcase = "*"
 DictObject = "*"
 Shapely = "*"
-civic_utils = {editable = true,path = "./../../utils"}
+politico-civic-utils = "*"
 
 
 [dev-packages]

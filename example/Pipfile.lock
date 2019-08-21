@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3b7d246b706eaded83d19fa0e74db51c0cacd6dcdd48f768b61fbca7c6ebfa4d"
+            "sha256": "a8897c5eff4073f802333c6f7fbd91da1cc692ff1b4d125fd0abb4758550b9bf"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -64,10 +64,6 @@
                 "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
             ],
             "version": "==3.0.4"
-        },
-        "civic-utils": {
-            "editable": true,
-            "path": "./../../utils"
         },
         "colorama": {
             "hashes": [
@@ -223,6 +219,14 @@
                 "sha256:b9817417e95936bf75d85d3f8767f7df6cdde751fc40aed3bb3074cbcb77757c"
             ],
             "version": "==0.12.0"
+        },
+        "politico-civic-utils": {
+            "hashes": [
+                "sha256:6840e318d0a960dd73ae22a9bdccd81f6f13e8f21b6f94f7fed157b588caa2a9",
+                "sha256:e4bc0cca35c55389fa01b674774457aca463f6240192efe3a66c36b1ac47cda3"
+            ],
+            "index": "pypi",
+            "version": "==0.0.6"
         },
         "progress": {
             "hashes": [
