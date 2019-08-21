@@ -1,8 +1,15 @@
+# Imports from other dependencies.
+from civic_utils.serializers import CommandLineListSerializer
+from civic_utils.serializers import NaturalKeySerializerMixin
+
+
+# Imports from geography.
 from geography.models import PointLabelOffset
-from rest_framework import serializers
 
 
-class PointLabelOffsetSerializer(serializers.ModelSerializer):
-    class Meta:
+class PointLabelOffsetSerializer(
+    NaturalKeySerializerMixin, CommandLineListSerializer
+):
+    class Meta(CommandLineListSerializer.Meta):
         model = PointLabelOffset
         fields = "__all__"
