@@ -1,7 +1,7 @@
+# Imports from geography.
 from geography.models import Division
 from geography.serializers import DivisionSerializer
-
-from .base import BaseViewSet
+from geography.viewsets.base import BaseViewSet
 
 
 class DivisionViewSet(BaseViewSet):

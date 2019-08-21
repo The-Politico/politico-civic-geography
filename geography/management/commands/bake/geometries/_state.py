@@ -1,9 +1,15 @@
+# Imports from python.
 import os
 
+
+# Imports from other dependencies.
 from tqdm import tqdm
 
+
+# Imports from geography.
 from geography.conf import settings
-from geography.models import Division, Geometry
+from geography.models import Division
+from geography.models import Geometry
 
 
 class StateGeometries(object):

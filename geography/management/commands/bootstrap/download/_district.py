@@ -1,8 +1,9 @@
+# Imports from python.
 import os
+from pathlib import Path
 import shutil
 import urllib.request as request
 import zipfile
-from pathlib import Path
 
 
 class DownloadDistrict(object):

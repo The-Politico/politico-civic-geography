@@ -1,7 +1,7 @@
-# flake8: noqa
-from .division import DivisionSerializer
-from .division_level import DivisionLevelSerializer
-from .geometry import GeometrySerializer
-from .geometry_list import GeometryListSerializer
-from .point_label_offset import PointLabelOffsetSerializer
-from .point import PointSerializer
+# Imports from geography.
+from geography.serializers.division import DivisionSerializer
+from geography.serializers.division_level import DivisionLevelSerializer
+from geography.serializers.geometry import GeometrySerializer
+from geography.serializers.geometry_list import GeometryListSerializer
+from geography.serializers.point_label_offset import PointLabelOffsetSerializer
+from geography.serializers.point import PointSerializer

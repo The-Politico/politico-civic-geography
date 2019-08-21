@@ -1,11 +1,17 @@
+# Imports from python.
 import json
 import os
 
-from tqdm import tqdm
 
+# Imports from other dependencies.
 import shapefile
+from tqdm import tqdm
 import us
-from geography.models import Division, Geometry
+
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import Geometry
 from geography.utils.lookups import township_states
 
 

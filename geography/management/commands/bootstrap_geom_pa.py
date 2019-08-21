@@ -1,14 +1,24 @@
+# Imports from python.
 import json
 import os
 import subprocess
 
-from tqdm import tqdm
 
-import geojson
-import shapefile
+# Imports from Django.
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.core.management.base import BaseCommand
-from geography.models import Division, DivisionLevel
+
+
+# Imports from other dependencies.
+import geojson
+import shapefile
+from tqdm import tqdm
+
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import DivisionLevel
+
 
 SHP_BASE = "http://www.pacourts.us/assets/files/setting-6061/file-6845.zip"
 SHP_SLUG = "clipped_pa"

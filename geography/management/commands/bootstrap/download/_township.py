@@ -1,10 +1,16 @@
+# Imports from python.
 import os
+from pathlib import Path
 import shutil
 import urllib.request as request
 import zipfile
-from pathlib import Path
 
+
+# Imports from other dependencies.
 import us
+
+
+# Imports from geography.
 from geography.utils.lookups import township_states
 
 

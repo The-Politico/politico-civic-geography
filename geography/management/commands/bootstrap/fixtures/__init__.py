@@ -1,5 +1,13 @@
-# flake8: noqa
-from ._county import CountyFixtures
-from ._district import DistrictFixtures
-from ._nation import NationFixtures
-from ._state import StateFixtures
+# Imports from geography.
+from geography.management.commands.bootstrap.fixtures._county import (
+    CountyFixtures,
+)
+from geography.management.commands.bootstrap.fixtures._district import (
+    DistrictFixtures,
+)
+from geography.management.commands.bootstrap.fixtures._nation import (
+    NationFixtures,
+)
+from geography.management.commands.bootstrap.fixtures._state import (
+    StateFixtures,
+)

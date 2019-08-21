@@ -1,7 +1,12 @@
-import us
+# Imports from other dependencies.
 from census import Census
 from DictObject import DictObject
+import us
+
+
+# Imports from geography.
 from geography.conf import settings
+
 
 census = Census(settings.CENSUS_API_KEY)
 

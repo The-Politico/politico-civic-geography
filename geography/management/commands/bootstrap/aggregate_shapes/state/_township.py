@@ -1,7 +1,13 @@
+# Imports from python.
 import os
 
+
+# Imports from other dependencies.
 import geojson
 import shapefile
+
+
+# Imports from geography.
 from geography.utils.lookups import township_lookup
 
 

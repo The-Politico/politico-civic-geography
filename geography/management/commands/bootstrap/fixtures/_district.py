@@ -1,11 +1,20 @@
+# Imports from python.
 import json
 import os
 
-from tqdm import tqdm
 
-import shapefile
+# Imports from Django.
 from django.contrib.humanize.templatetags.humanize import ordinal
-from geography.models import Division, Geometry
+
+
+# Imports from other dependencies.
+from tqdm import tqdm
+import shapefile
+
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import Geometry
 
 
 class DistrictFixtures(object):

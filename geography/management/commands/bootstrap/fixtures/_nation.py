@@ -1,10 +1,15 @@
+# Imports from python.
 import json
 import os
 
-from tqdm import tqdm
 
+# Imports from other dependencies.
 import geojson
 import shapefile
+from tqdm import tqdm
+
+
+# Imports from geography.
 from geography.models import Geometry
 
 

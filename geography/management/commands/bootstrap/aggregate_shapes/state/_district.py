@@ -1,8 +1,14 @@
+# Imports from python.
 import os
 
+
+# Imports from Django.
+from django.contrib.humanize.templatetags.humanize import ordinal
+
+
+# Imports from other dependencies.
 import geojson
 import shapefile
-from django.contrib.humanize.templatetags.humanize import ordinal
 
 
 class StateDistrictShapes(object):

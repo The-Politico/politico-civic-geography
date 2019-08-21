@@ -1,8 +1,4 @@
-"""
-Use this file to configure pluggable app settings and resolve defaults
-with any overrides set in project settings.
-"""
-
+# Imports from Django.
 from django.conf import settings as project_settings
 
 

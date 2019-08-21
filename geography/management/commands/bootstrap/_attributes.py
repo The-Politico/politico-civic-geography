@@ -1,6 +1,10 @@
+# Imports from other dependencies.
 from tqdm._utils import _term_move_up
 
-from geography.models import Division, DivisionLevel
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import DivisionLevel
 
 
 class Attributes(object):
