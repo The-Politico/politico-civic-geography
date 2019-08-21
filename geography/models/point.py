@@ -1,9 +1,18 @@
+# Imports from Django.
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 
-class Point(models.Model):
+# Imports from other dependencies.
+from civic_utils.models import CivicBaseModel
+from civic_utils.models import UniqueIdentifierMixin
+
+
+class Point(UniqueIdentifierMixin, CivicBaseModel):
     """A point is a city."""
+
+    natural_key_fields = ["geometry", "label", "lat", "lon"]
+    uid_prefix = "point"
 
     geometry = models.ForeignKey(
         "Geometry", on_delete=models.CASCADE, related_name="points"
@@ -29,6 +38,19 @@ class Point(models.Model):
 
     label = models.CharField(max_length=250)
 
+    class Meta:
+        unique_together = ("geometry", "label", "lat", "lon")
+
+    def __str__(self):
+        return "{}, {}".format(self.label, self.geometry.division.name)
+
+    def get_uid_suffix(self):
+        return (
+            f"geometry={self.geometry.uid}"
+            f"&label={self.label}"
+            f"&coords={self.lat},{self.lon}"
+        )
+
     def to_topojson(self):
         offsets = (
             [offset.to_object() for offset in self.offsets.all()]
@@ -46,12 +68,12 @@ class Point(models.Model):
             },
         }
 
-    def __str__(self):
-        return "{}, {}".format(self.label, self.geometry.division.name)
 
-
-class PointLabelOffset(models.Model):
+class PointLabelOffset(UniqueIdentifierMixin, CivicBaseModel):
     """Offsets used to display a Point's label."""
+
+    natural_key_fields = ["point", "threshold"]
+    uid_prefix = "pointlabel"
 
     point = models.ForeignKey(
         Point, on_delete=models.CASCADE, related_name="offsets"
@@ -67,8 +89,11 @@ class PointLabelOffset(models.Model):
         help_text="A threshold in pixels above which to apply this offset.",
     )
 
-    def to_object(self):
-        return {"threshold": self.threshold, "x": self.x, "y": self.y}
-
     def __str__(self):
         return "{} @ {}".format(self.threshold, self.point)
+
+    def get_uid_suffix(self):
+        return f"point={self.point.uid}&threshold={self.threshold}"
+
+    def to_object(self):
+        return {"threshold": self.threshold, "x": self.x, "y": self.y}
