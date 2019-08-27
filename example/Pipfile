@@ -1,32 +1,29 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [requires]
-
 python_version = "3.6"
 
+[pipenv]
+allow_prereleases = true
 
 [packages]
-
-pytest = "*"
-"flake8" = "*"
 Django = ">=2.2"
 djangorestframework = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
-geography = {path = "./..", editable = true}
 stringcase = "*"
 DictObject = "*"
 Shapely = "*"
-politico-civic-utils = "*"
-
+"politico-civic-utils" = "~=1.0a1.dev1"
+geography = {path = "./..", editable = true}
 
 [dev-packages]
 ipython = "*"
+pytest = "*"
+"flake8" = "*"
 Sphinx = "*"
 sphinxcontrib-django = "*"
 sphinx_rtd_theme = "*"
