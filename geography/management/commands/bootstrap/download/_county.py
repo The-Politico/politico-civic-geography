@@ -19,7 +19,6 @@ class DownloadCounty(object):
             os.makedirs(DOWNLOAD_PATH)
 
         if not Path(ZIPFILE).is_file():
-            print("path", "{}.zip".format(SHP_PATH))
             with request.urlopen("{}.zip".format(SHP_PATH)) as response, open(
                 ZIPFILE, "wb"
             ) as out_file:
