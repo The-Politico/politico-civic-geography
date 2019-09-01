@@ -7,6 +7,7 @@ import os
 import shapefile
 from tqdm import tqdm
 import us
+from uuslug import slugify
 
 
 # Imports from geography.
@@ -59,6 +60,13 @@ class StateFixtures(object):
                 division=state_obj,
                 subdivision_level=self.STATE_LEVEL,
                 simplification=self.THRESHOLDS["state"],
+                data_summary=slugify(
+                    "{}--{}--{}".format(
+                        state_obj.slug,
+                        self.STATE_LEVEL.slug,
+                        self.THRESHOLDS["state"],
+                    )
+                ),
                 source=os.path.join(
                     self.SHP_SOURCE_BASE.format(self.YEAR), SHP_SLUG
                 )
@@ -74,6 +82,13 @@ class StateFixtures(object):
                 division=state_obj,
                 subdivision_level=self.COUNTY_LEVEL,
                 simplification=self.THRESHOLDS["county"],
+                data_summary=slugify(
+                    "{}--{}--{}".format(
+                        state_obj.slug,
+                        self.COUNTY_LEVEL.slug,
+                        self.THRESHOLDS["county"],
+                    )
+                ),
                 source=os.path.join(
                     self.SHP_SOURCE_BASE.format(self.YEAR), SHP_SLUG
                 )
@@ -87,6 +102,13 @@ class StateFixtures(object):
                 division=state_obj,
                 subdivision_level=self.DISTRICT_LEVEL,
                 simplification=self.THRESHOLDS["district"],
+                data_summary=slugify(
+                    "{}--{}--{}".format(
+                        state_obj.slug,
+                        self.DISTRICT_LEVEL.slug,
+                        self.THRESHOLDS["district"],
+                    )
+                ),
                 source=os.path.join(
                     self.SHP_SOURCE_BASE.format(self.YEAR),
                     "cb_{}_us_cd{}_500k".format(self.YEAR, self.CONGRESS),
@@ -103,6 +125,13 @@ class StateFixtures(object):
                     division=state_obj,
                     subdivision_level=self.TOWNSHIP_LEVEL,
                     simplification=self.THRESHOLDS["county"],
+                    data_summary=slugify(
+                        "{}--{}--{}".format(
+                            state_obj.slug,
+                            self.TOWNSHIP_LEVEL.slug,
+                            self.THRESHOLDS["county"],
+                        )
+                    ),
                     source=os.path.join(
                         self.SHP_SOURCE_BASE.format(self.YEAR),
                         "cb_{}_{}_cousub_500k".format(

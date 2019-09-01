@@ -1,13 +1,13 @@
 # Imports from geography.
 from geography.management.commands.bootstrap.fixtures._county import (
-    CountyFixtures,
+    CountyFixtures
 )
 from geography.management.commands.bootstrap.fixtures._district import (
-    DistrictFixtures,
+    DistrictFixtures
 )
 from geography.management.commands.bootstrap.fixtures._nation import (
-    NationFixtures,
+    NationFixtures
 )
 from geography.management.commands.bootstrap.fixtures._state import (
-    StateFixtures,
+    StateFixtures
 )

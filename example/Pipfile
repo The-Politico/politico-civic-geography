@@ -17,7 +17,7 @@ dj-database-url = "*"
 stringcase = "*"
 DictObject = "*"
 Shapely = "*"
-"politico-civic-utils" = "~=1.0a1.dev1"
+"politico-civic-utils" = "~=1.0a1.dev10"
 geography = {path = "./..", editable = true}
 
 [dev-packages]

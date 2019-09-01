@@ -1,7 +1,3 @@
-# Imports from python.
-import uuid
-
-
 # Imports from Django.
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,7 +8,6 @@ from django.db import models
 from civic_utils.models import CivicBaseModel
 from civic_utils.models import CommonIdentifiersMixin
 from civic_utils.models import UUIDMixin
-from uuslug import uuslug
 
 
 # Imports from geography.

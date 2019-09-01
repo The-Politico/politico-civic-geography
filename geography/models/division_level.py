@@ -62,6 +62,6 @@ class DivisionLevel(UniqueIdentifierMixin, UUIDMixin, CivicBaseModel):
 
     def get_uid_prefix(self):
         if self.parent:
-            return "{}:{}".format(self.parent.uid, self.level.uid)
+            return "{}:{}".format(self.parent.uid, self.uid)
 
-        return self.level.uid
+        return self.uid

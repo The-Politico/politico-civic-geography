@@ -26,7 +26,7 @@ class Attributes(object):
         self.TOWNSHIP_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.TOWNSHIP, parent=self.COUNTY_LEVEL
         )
-        self.PRECINCT_LEVEL = DivisionLevel.objects.get_or_create(
+        self.PRECINCT_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.PRECINCT, parent=self.COUNTY_LEVEL
         )
 
