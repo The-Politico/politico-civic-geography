@@ -15,7 +15,7 @@ class DivisionLevel(UniqueIdentifierMixin, UUIDMixin, CivicBaseModel):
     Exempli gratia, federal, state, district, county, precinct, municipal.
     """
 
-    natural_key_fields = ["parent", "uid"]
+    natural_key_fields = ["name"]
     uid_prefix = "divisionlevel"
     uid_base_field = "slug"
     # default_serializer = ""
