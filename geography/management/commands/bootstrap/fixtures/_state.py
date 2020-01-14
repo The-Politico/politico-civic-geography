@@ -32,9 +32,7 @@ class StateFixtures(object):
         for shp in tqdm(shape.shapeRecords(), desc="States"):
             state = dict(zip(field_names, shp.record))
             postal = us.states.lookup(state["STATEFP"]).abbr
-            # Skip territories and DC
-            if int(state["STATEFP"]) > 56 or int(state["STATEFP"]) == 11:
-                continue
+
             state_obj, created = Division.objects.update_or_create(
                 code=state["STATEFP"],
                 level=self.STATE_LEVEL,
