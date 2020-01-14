@@ -33,6 +33,11 @@ class StateDistrictShapes(object):
         features = []
         for shp in district_records:
             rec = dict(zip(field_names, shp.record))
+
+            # Skip creating districts for territories and DC.
+            if int(rec["STATEFP"]) > 56 or int(rec["STATEFP"]) == 11:
+                continue
+
             code_key = "CD{}FP".format(self.CONGRESS)
             if int(rec[code_key]) == 0:
                 label = "At-large congressional district".format(
