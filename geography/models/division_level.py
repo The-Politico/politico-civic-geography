@@ -27,6 +27,8 @@ class DivisionLevel(UniqueIdentifierMixin, UUIDMixin, CivicBaseModel):
     TOWNSHIP = "township"
     PRECINCT = "precinct"
 
+    VOTERS_ABROAD = "abroad"
+
     LEVEL_CHOICES = (
         (COUNTRY, "Country"),
         (STATE, "State"),
@@ -34,6 +36,7 @@ class DivisionLevel(UniqueIdentifierMixin, UUIDMixin, CivicBaseModel):
         (COUNTY, "County"),
         (TOWNSHIP, "Township"),
         (PRECINCT, "Precinct"),
+        (VOTERS_ABROAD, "Voters abroad"),
     )
 
     name = models.CharField(max_length=255, unique=True, choices=LEVEL_CHOICES)

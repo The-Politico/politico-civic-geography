@@ -29,6 +29,9 @@ class Attributes(object):
         self.PRECINCT_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.PRECINCT, parent=self.COUNTY_LEVEL
         )
+        self.VOTERS_ABROAD_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.VOTERS_ABROAD
+        )
 
         self.NATION, created = Division.objects.get_or_create(
             code="00",

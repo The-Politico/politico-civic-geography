@@ -83,7 +83,9 @@ class Division(CommonIdentifiersMixin, UUIDMixin, CivicBaseModel):
         current_division_slug = "{}={}".format(self.level.slug, self.code)
 
         if self.parent:
-            return "{}&{}".format(self.parent.uid, current_division_slug)
+            return "{}&{}".format(
+                self.parent.get_uid_suffix(), current_division_slug
+            )
 
         return current_division_slug
 
