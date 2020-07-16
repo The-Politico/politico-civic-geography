@@ -1,14 +1,25 @@
+# Imports from python.
 import os
 
+
+# Imports from Django.
+from django.core.management.base import BaseCommand
+
+
+# Imports from other dependencies.
 import geojson
 import shapefile
-from django.core.management.base import BaseCommand
-from geography.models import Division, DivisionLevel, Geometry
+
+
+# Imports from geography.
+from geography.management.commands.bootstrap._arguments import ArgumentsMethods
+from geography.management.commands.bootstrap._attributes import Attributes
+from geography.management.commands.bootstrap._toposimplify import Toposimplify
+from geography.models import Division
+from geography.models import DivisionLevel
+from geography.models import Geometry
 from geography.utils.lookups import county_lookup
 
-from .bootstrap._arguments import ArgumentsMethods
-from .bootstrap._attributes import Attributes
-from .bootstrap._toposimplify import Toposimplify
 
 SHP_SLUG = "clipped_hi"
 STATE_LEVEL = DivisionLevel.STATE

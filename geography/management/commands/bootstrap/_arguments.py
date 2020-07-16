@@ -1,3 +1,4 @@
+# Imports from Django.
 from django.core.management.base import CommandError
 
 
@@ -25,16 +26,16 @@ class ArgumentsMethods(object):
             "--year",
             action="store",
             dest="year",
-            default="2017",
-            help="Specify year of shapefile series (default, 2017)",
+            default="2018",
+            help="Specify year of shapefile series (default, 2018)",
         )
         parser.add_argument(
             "--congress",
             action="store",
             dest="congress",
-            default="115",
+            default="116",
             help="Specify congress of district shapefile series \
-             (default, 115)",
+             (default, 116)",
         )
         parser.add_argument(
             "--nationThreshold",

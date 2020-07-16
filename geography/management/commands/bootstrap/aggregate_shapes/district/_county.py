@@ -1,9 +1,16 @@
+# Imports from python.
 import os
 
+
+# Imports from other dependencies.
 import geojson
 import shapefile
+from shapely.geometry import mapping
+from shapely.geometry import shape
+
+
+# Imports from geography.
 from geography.utils.lookups import county_lookup
-from shapely.geometry import mapping, shape
 
 
 class DistrictCountyShapes(object):

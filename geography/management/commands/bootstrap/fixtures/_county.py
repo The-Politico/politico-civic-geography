@@ -1,5 +1,8 @@
+# Imports from other dependencies.
 from tqdm import tqdm
 
+
+# Imports from geography.
 from geography.models import Division
 from geography.utils.lookups import counties
 

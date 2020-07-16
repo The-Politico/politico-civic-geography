@@ -1,7 +1,7 @@
+# Imports from geography.
 from geography.models import Point
 from geography.serializers import PointSerializer
-
-from .base import BaseViewSet
+from geography.viewsets.base import BaseViewSet
 
 
 class PointViewSet(BaseViewSet):

@@ -1,10 +1,16 @@
-from tqdm import tqdm
-
+# Imports from Django.
 from django.core.management.base import BaseCommand
 
-from .bake._arguments import ArgumentsMethods
-from .bake._attributes import Attributes
-from .bake.geometries import DistrictGeometries, StateGeometries
+
+# Imports from other dependencies.
+from tqdm import tqdm
+
+
+# Imports from geography.
+from geography.management.commands.bake._arguments import ArgumentsMethods
+from geography.management.commands.bake._attributes import Attributes
+from geography.management.commands.bake.geometries import DistrictGeometries
+from geography.management.commands.bake.geometries import StateGeometries
 
 
 class Command(

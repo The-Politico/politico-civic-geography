@@ -1,8 +1,15 @@
+# Imports from other dependencies.
+from civic_utils.serializers import CommandLineListSerializer
+from civic_utils.serializers import NaturalKeySerializerMixin
+
+
+# Imports from geography.
 from geography.models import DivisionLevel
-from rest_framework import serializers
 
 
-class DivisionLevelSerializer(serializers.ModelSerializer):
-    class Meta:
+class DivisionLevelSerializer(
+    NaturalKeySerializerMixin, CommandLineListSerializer
+):
+    class Meta(CommandLineListSerializer.Meta):
         model = DivisionLevel
         fields = "__all__"

@@ -1,10 +1,16 @@
+# Imports from python.
 import json
 import os
 
-from tqdm import tqdm
 
+# Imports from other dependencies.
 import geojson
 import shapefile
+from tqdm import tqdm
+from uuslug import slugify
+
+
+# Imports from geography.
 from geography.models import Geometry
 
 
@@ -37,6 +43,13 @@ class NationFixtures(object):
             division=self.NATION,
             subdivision_level=self.STATE_LEVEL,
             simplification=self.THRESHOLDS["nation"],
+            data_summary=slugify(
+                "{}--{}--{}".format(
+                    self.NATION.slug,
+                    self.STATE_LEVEL.slug,
+                    self.THRESHOLDS["nation"],
+                )
+            ),
             source=os.path.join(
                 self.SHP_SOURCE_BASE.format(self.YEAR), SHP_SLUG
             )
@@ -54,6 +67,13 @@ class NationFixtures(object):
             division=self.NATION,
             subdivision_level=self.COUNTY_LEVEL,
             simplification=self.THRESHOLDS["nation"],
+            data_summary=slugify(
+                "{}--{}--{}".format(
+                    self.NATION.slug,
+                    self.COUNTY_LEVEL.slug,
+                    self.THRESHOLDS["nation"],
+                )
+            ),
             source=os.path.join(
                 self.SHP_SOURCE_BASE.format(self.YEAR), SHP_SLUG
             )

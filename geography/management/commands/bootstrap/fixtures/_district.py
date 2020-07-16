@@ -1,11 +1,20 @@
+# Imports from python.
 import json
 import os
 
-from tqdm import tqdm
 
-import shapefile
+# Imports from Django.
 from django.contrib.humanize.templatetags.humanize import ordinal
-from geography.models import Division, Geometry
+
+
+# Imports from other dependencies.
+from tqdm import tqdm
+import shapefile
+from uuslug import slugify
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import Geometry
 
 
 class DistrictFixtures(object):
@@ -63,6 +72,13 @@ class DistrictFixtures(object):
                 division=district_obj,
                 subdivision_level=self.DISTRICT_LEVEL,
                 simplification=self.THRESHOLDS["district"],
+                data_summary=slugify(
+                    "{}--{}--{}".format(
+                        district_obj.slug,
+                        self.DISTRICT_LEVEL.slug,
+                        self.THRESHOLDS["district"],
+                    )
+                ),
                 source=os.path.join(
                     self.SHP_SOURCE_BASE.format(self.YEAR), SHP_SLUG
                 )
@@ -87,6 +103,13 @@ class DistrictFixtures(object):
                 division=district_obj,
                 subdivision_level=self.COUNTY_LEVEL,
                 simplification=self.THRESHOLDS["county"],
+                data_summary=slugify(
+                    "{}--{}--{}".format(
+                        district_obj.slug,
+                        self.COUNTY_LEVEL.slug,
+                        self.THRESHOLDS["county"],
+                    )
+                ),
                 source=os.path.join(
                     self.SHP_SOURCE_BASE.format(self.YEAR), SHP_SLUG
                 )

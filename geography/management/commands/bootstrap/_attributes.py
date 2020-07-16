@@ -1,6 +1,10 @@
+# Imports from other dependencies.
 from tqdm._utils import _term_move_up
 
-from geography.models import Division, DivisionLevel
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import DivisionLevel
 
 
 class Attributes(object):
@@ -22,8 +26,11 @@ class Attributes(object):
         self.TOWNSHIP_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.TOWNSHIP, parent=self.COUNTY_LEVEL
         )
-        self.PRECINCT_LEVEL = DivisionLevel.objects.get_or_create(
+        self.PRECINCT_LEVEL, created = DivisionLevel.objects.get_or_create(
             name=DivisionLevel.PRECINCT, parent=self.COUNTY_LEVEL
+        )
+        self.VOTERS_ABROAD_LEVEL, created = DivisionLevel.objects.get_or_create(
+            name=DivisionLevel.VOTERS_ABROAD
         )
 
         self.NATION, created = Division.objects.get_or_create(

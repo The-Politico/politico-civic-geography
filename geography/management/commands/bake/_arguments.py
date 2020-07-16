@@ -15,6 +15,6 @@ class ArgumentsMethods(object):
             "--year",
             action="store",
             dest="year",
-            default="2017",
-            help="Specify year of shapefile series (default, 2017)",
+            default="2018",
+            help="Specify year of shapefile series (default, 2018)",
         )

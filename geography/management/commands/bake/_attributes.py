@@ -1,6 +1,12 @@
+# Imports from python.
 import os
 
+
+# Imports from other dependencies.
 import boto3
+
+
+# Imports from geography.
 from geography.conf import settings
 from geography.models import DivisionLevel
 

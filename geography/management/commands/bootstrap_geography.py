@@ -1,18 +1,31 @@
-from tqdm import tqdm
-
+# Imports from Django.
 from django.core.management.base import BaseCommand
 
-from .bootstrap._arguments import ArgumentsMethods
-from .bootstrap._attributes import Attributes
-from .bootstrap._toposimplify import Toposimplify
-from .bootstrap.aggregate_shapes.district import DistrictCountyShapes
-from .bootstrap.aggregate_shapes.state import (StateCountyShapes,
-                                               StateDistrictShapes,
-                                               StateTownshipShapes)
-from .bootstrap.download import (DownloadCounty, DownloadDistrict,
-                                 DownloadState, DownloadTownship)
-from .bootstrap.fixtures import (CountyFixtures, DistrictFixtures,
-                                 NationFixtures, StateFixtures)
+
+# Imports from other dependencies.
+from tqdm import tqdm
+
+
+# Imports from geography.
+from geography.management.commands.bootstrap._arguments import ArgumentsMethods
+from geography.management.commands.bootstrap._attributes import Attributes
+from geography.management.commands.bootstrap._toposimplify import Toposimplify
+from geography.management.commands.bootstrap.aggregate_shapes.district import (
+    DistrictCountyShapes,
+)
+from geography.management.commands.bootstrap.aggregate_shapes.state import (
+    StateCountyShapes,
+    StateDistrictShapes,
+    StateTownshipShapes,
+)
+from geography.management.commands.bootstrap.download import DownloadCounty
+from geography.management.commands.bootstrap.download import DownloadDistrict
+from geography.management.commands.bootstrap.download import DownloadState
+from geography.management.commands.bootstrap.download import DownloadTownship
+from geography.management.commands.bootstrap.fixtures import CountyFixtures
+from geography.management.commands.bootstrap.fixtures import DistrictFixtures
+from geography.management.commands.bootstrap.fixtures import NationFixtures
+from geography.management.commands.bootstrap.fixtures import StateFixtures
 
 
 class Command(

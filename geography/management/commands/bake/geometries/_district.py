@@ -1,10 +1,16 @@
+# Imports from python.
 import os
 
-from tqdm import tqdm
 
+# Imports from other dependencies.
+from tqdm import tqdm
 import us
+
+
+# Imports from geography.
 from geography.conf import settings
-from geography.models import Division, Geometry
+from geography.models import Division
+from geography.models import Geometry
 
 
 class DistrictGeometries(object):

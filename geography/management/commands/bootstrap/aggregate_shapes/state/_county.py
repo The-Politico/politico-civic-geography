@@ -1,7 +1,13 @@
+# Imports from python.
 import os
 
+
+# Imports from other dependencies.
 import geojson
 import shapefile
+
+
+# Imports from geography.
 from geography.utils.lookups import county_lookup
 
 
@@ -27,6 +33,11 @@ class StateCountyShapes(object):
         features = []
         for shp in county_records:
             rec = dict(zip(field_names, shp.record))
+
+            # Skip creating counties for territories and DC.
+            if int(rec["STATEFP"]) > 56 or int(rec["STATEFP"]) == 11:
+                continue
+
             geometry = shp.shape.__geo_interface__
             geodata = {
                 "type": "Feature",

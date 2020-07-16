@@ -1,3 +1,3 @@
-default_app_config = "geography.apps.GeographyConfig"
+__version__ = (1, "0a2", "dev1")
 
-__version__ = "0.5.1"
+default_app_config = "geography.apps.GeographyConfig"

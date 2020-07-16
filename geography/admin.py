@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
+# Imports from Django.
 from django.contrib import admin
-from geography.models import (
-    Division,
-    DivisionLevel,
-    Geometry,
-    IntersectRelationship,
-    Point,
-    PointLabelOffset,
-)
+
+
+# Imports from geography.
+from geography.models import Division
+from geography.models import DivisionLevel
+from geography.models import Geometry
+from geography.models import IntersectRelationship
+from geography.models import Point
+from geography.models import PointLabelOffset
 
 
 def custom_titled_filter(title):

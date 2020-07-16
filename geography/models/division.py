@@ -1,29 +1,30 @@
-# -*- coding: utf-8 -*-
-import uuid
-
+# Imports from Django.
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from uuslug import uuslug
-
-from .division_level import DivisionLevel
-from .intersect_relationship import IntersectRelationship
 
 
-class Division(models.Model):
+# Imports from other dependencies.
+from civic_utils.models import CivicBaseModel
+from civic_utils.models import CommonIdentifiersMixin
+from civic_utils.models import UUIDMixin
+
+
+# Imports from geography.
+from geography.models.division_level import DivisionLevel
+from geography.models.intersect_relationship import IntersectRelationship
+
+
+class Division(CommonIdentifiersMixin, UUIDMixin, CivicBaseModel):
+    """A political or administrative geography.
+
+    For example, a certain state, county, district, precinct or municipality.
     """
-    A political or administrative geography.
 
-    For example, a particular state, county, district, precinct or
-    municipality.
-    """
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    uid = models.CharField(max_length=500, editable=False, blank=True)
-
-    slug = models.SlugField(
-        blank=True, max_length=255, unique=True, editable=False
-    )
+    natural_key_fields = ["level", "uid"]
+    uid_prefix = "division"
+    uid_base_field = "name"
+    # default_serializer = ""
 
     name = models.CharField(max_length=255)
 
@@ -67,19 +68,26 @@ class Division(models.Model):
     effective_start = models.DateTimeField(null=True, blank=True)
     effective_end = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         """
         **uid**: :code:`division:{parentuid}_{levelcode}-{code}`
         """
-        slug = "{}:{}".format(self.level.uid, self.code)
-        if self.parent:
-            self.uid = "{}_{}".format(self.parent.uid, slug)
-        else:
-            self.uid = slug
-        self.slug = uuslug(
-            self.name, instance=self, max_length=100, separator="-", start_no=2
-        )
+        self.generate_common_identifiers()
+
         super(Division, self).save(*args, **kwargs)
+
+    def get_uid_suffix(self):
+        current_division_slug = "{}={}".format(self.level.slug, self.code)
+
+        if self.parent:
+            return "{}&{}".format(
+                self.parent.get_uid_suffix(), current_division_slug
+            )
+
+        return current_division_slug
 
     def add_intersecting(self, division, intersection=None, symm=True):
         """
@@ -130,6 +138,3 @@ class Division(models.Model):
                 return True
 
         return False
-
-    def __str__(self):
-        return self.name

@@ -1,7 +1,7 @@
+# Imports from geography.
 from geography.models import PointLabelOffset
 from geography.serializers import PointLabelOffsetSerializer
-
-from .base import BaseViewSet
+from geography.viewsets.base import BaseViewSet
 
 
 class PointLabelOffsetViewSet(BaseViewSet):
