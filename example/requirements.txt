@@ -7,7 +7,7 @@ backcall==0.1.0
 boto3==1.7.73
 botocore==1.10.73
 census==0.8.7
-certifi==2018.4.16
+certifi==2022.12.7
 chardet==3.0.4
 decorator==4.3.0
 DictObject==1.0.5
